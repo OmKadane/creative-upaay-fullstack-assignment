@@ -40,7 +40,7 @@
 @layer components {
   /* Mobile app shell */
   .app-shell {
-    @apply relative w-full max-w-[390px] h-[813px] rounded-[5px] mx-auto bg-[#F7F8FD] flex flex-col overflow-hidden;
+    @apply relative w-full max-w-[390px] h-[846px] rounded-[5px] mx-auto bg-[#F7F8FD] flex flex-col overflow-hidden;
   }
 
   /* Page container with bottom nav padding */

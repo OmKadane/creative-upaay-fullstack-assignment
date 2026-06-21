@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, Bell, TrendingUp } from 'lucide-react';
+import { MapPin, TrendingUp } from 'lucide-react';
 import MovieCard from '../components/movie/MovieCard';
+import heroPoster from '../assets/Meg-2-The-Trench-Hero-Poster.svg';
+import searchIcon from '../assets/search.svg';
 import {
   fetchMoviesStart,
   fetchMoviesSuccess,
@@ -45,59 +47,38 @@ const HomePage = () => {
   const featuredMovie = nowShowing[0];
 
   return (
-    <div className="page-container bg-[#F7F8FD]">
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-5 pt-6 pb-4">
-        <div>
-          <p className="text-[11px] text-[#6B7280] font-semibold tracking-wide uppercase flex items-center gap-1">
-            <MapPin size={10} className="text-[#5B51DE]" /> Mumbai, IN
-          </p>
-          <h1 className="text-[22px] font-display font-bold text-[#1A1A1A] mt-0.5">
-            What's <span className="text-[#5B51DE]">Playing?</span>
-          </h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="p-2.5 rounded-xl bg-white border border-[#E5E7EB] text-[#6B7280] hover:text-[#5B51DE] transition-colors shadow-sm active:scale-95">
-            <Bell size={18} />
-          </button>
-          <button
-            onClick={() => navigate('/search')}
-            className="p-2.5 rounded-xl bg-white border border-[#E5E7EB] text-[#6B7280] hover:text-[#5B51DE] transition-colors shadow-sm active:scale-95"
-          >
-            <Search size={18} />
-          </button>
-        </div>
-      </div>
-
-      {/* Featured banner */}
-      {featuredMovie && !loading && (
+    <div className="page-container bg-[#F7F8FD] !pt-0">
+      {/* Hero Poster Header */}
+      <div 
+        className="relative overflow-hidden mb-6"
+        style={{
+          width: '390px',
+          height: '220px',
+        }}
+      >
+        <img
+          src={heroPoster}
+          alt="Meg 2: The Trench"
+          className="w-full h-full object-cover"
+        />
+        {/* Search Icon */}
         <button
-          onClick={() => navigate(`/movies/${featuredMovie._id}`)}
-          className="relative mx-5 mb-6 rounded-3xl overflow-hidden h-52 w-[calc(100%-2.5rem)] active:scale-98 transition-transform text-left bg-white border border-[#E5E7EB] shadow-sm flex flex-col justify-between"
+          onClick={() => navigate('/search')}
+          className="absolute"
+          style={{
+            width: '28px',
+            height: '28px',
+            top: '39px',
+            left: '340px',
+            padding: 0,
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer'
+          }}
         >
-          <div className="h-[60%] w-full relative">
-            <img
-              src={featuredMovie.bannerUrl || featuredMovie.posterUrl}
-              alt={featuredMovie.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute top-3 right-3">
-              <span className="bg-[#1A1A1A]/75 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                ⭐ {featuredMovie.imdbRating?.toFixed(1)}
-              </span>
-            </div>
-          </div>
-          <div className="p-4 h-[40%] flex flex-col justify-center">
-            <span className="badge-brand text-[9px] mb-1.5 w-fit">🔥 Featured</span>
-            <h2 className="font-display font-bold text-[#1A1A1A] text-sm leading-tight truncate">
-              {featuredMovie.title}
-            </h2>
-            <p className="text-[11px] text-[#6B7280] mt-0.5">
-              {featuredMovie.genre?.slice(0, 2).join(' • ')} · {featuredMovie.rating}
-            </p>
-          </div>
+          <img src={searchIcon} alt="Search" className="w-full h-full" />
         </button>
-      )}
+      </div>
 
       {/* Tab selector */}
       <div className="flex gap-2 mx-5 mb-5 bg-white border border-[#E5E7EB] p-1 rounded-2xl shadow-sm">
