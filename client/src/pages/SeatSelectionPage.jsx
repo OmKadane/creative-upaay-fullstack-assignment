@@ -51,15 +51,15 @@ const SeatSelectionPage = () => {
   }, [selectedSeats.length, dispatch]);
 
   return (
-    <div className="h-screen flex flex-col bg-dark-900">
+    <div className="h-screen flex flex-col bg-[#F7F8FD]">
       {/* Header */}
       <Header
         title={showtime?.movie?.title || 'Select Seats'}
         rightAction={
           showtime && (
             <div className="text-right">
-              <p className="text-[10px] text-gray-500">{showtime.theater?.name}</p>
-              <p className="text-xs text-brand-400 font-medium">
+              <p className="text-[9px] font-bold text-[#6B7280] truncate max-w-[120px]">{showtime.theater?.name}</p>
+              <p className="text-[10px] text-[#5B51DE] font-semibold">
                 {formatDate(showtime.date)} · {showtime.time}
               </p>
             </div>
@@ -74,8 +74,8 @@ const SeatSelectionPage = () => {
       <div className="flex-1 overflow-y-auto py-4">
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full gap-3">
-            <div className="w-10 h-10 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
-            <p className="text-sm text-gray-400">Loading seat map...</p>
+            <div className="w-9 h-9 rounded-full border-2 border-[#5B51DE] border-t-transparent animate-spin" />
+            <p className="text-xs font-semibold text-[#6B7280]">Loading seat map...</p>
           </div>
         ) : (
           <SeatMatrix seats={seats} />
@@ -84,10 +84,10 @@ const SeatSelectionPage = () => {
 
       {/* Selected seats summary bar */}
       {selectedSeats.length > 0 && (
-        <div className="glass border-t border-dark-600/30 px-5 py-3 flex flex-wrap gap-1.5">
-          <span className="text-[10px] text-gray-400 w-full mb-1">Selected:</span>
+        <div className="bg-white border-t border-[#E5E7EB] px-5 py-3.5 flex flex-wrap gap-1.5 shadow-sm">
+          <span className="text-[10px] font-bold text-[#6B7280] w-full mb-1 uppercase tracking-wider">Selected Seats:</span>
           {selectedSeats.map((id) => (
-            <span key={id} className="badge-brand text-xs">{id}</span>
+            <span key={id} className="badge-brand text-xs font-bold px-2.5 py-0.5 rounded-full">{id}</span>
           ))}
         </div>
       )}

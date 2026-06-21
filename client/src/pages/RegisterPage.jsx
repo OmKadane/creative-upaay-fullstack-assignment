@@ -1,25 +1,29 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import sofaLogo from '../assets/sofa.svg';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { login } = useAuth();
+  const { register } = useAuth();
 
-  const from = location.state?.from?.pathname || '/';
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
+    name: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     const errs = {};
+    if (!form.name.trim()) errs.name = 'Name is required';
     if (!form.email.match(/^\S+@\S+\.\S+$/)) errs.email = 'Enter a valid email';
     if (form.password.length < 6) errs.password = 'Password must be at least 6 characters';
+    if (form.password !== form.confirmPassword) {
+      errs.confirmPassword = 'Passwords do not match';
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -28,9 +32,13 @@ const LoginPage = () => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    const result = await login({ email: form.email, password: form.password });
+    const result = await register({
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    });
     setLoading(false);
-    if (result.success) navigate(from, { replace: true });
+    if (result.success) navigate('/');
   };
 
   return (
@@ -81,14 +89,14 @@ const LoginPage = () => {
         <button
           type="button"
           onClick={() => navigate('/login')}
-          className="flex-1 py-1 text-xs font-bold rounded-[5px] transition-all duration-200 bg-white text-[#1A1A1A] shadow-sm"
+          className="flex-1 py-1 text-xs font-bold rounded-[5px] transition-all duration-200 text-[#6B7280] hover:text-[#1A1A1A]"
         >
           Login
         </button>
         <button
           type="button"
           onClick={() => navigate('/register')}
-          className="flex-1 py-1 text-xs font-bold rounded-[5px] transition-all duration-200 text-[#6B7280] hover:text-[#1A1A1A]"
+          className="flex-1 py-1 text-xs font-bold rounded-[5px] transition-all duration-200 bg-white text-[#1A1A1A] shadow-sm"
         >
           Sign Up
         </button>
@@ -101,12 +109,28 @@ const LoginPage = () => {
           className="absolute flex flex-col"
           style={{
             width: '342px',
-            height: '110px',
+            height: '248px',
             top: '347px',
             left: '24px',
             gap: '28px',
           }}
         >
+          {/* Full Name */}
+          <div className="flex flex-col relative" style={{ height: '41px' }}>
+            <input
+              type="text"
+              placeholder="Name"
+              value={form.name}
+              onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+              className={`w-full bg-transparent border-b border-[#C7C7C7] p-[10px] text-sm text-[#1A1A1A] placeholder-[#9CA3AF] outline-none transition-all duration-150 rounded-none focus:border-[#5B51DE] h-[41px] ${
+                errors.name ? 'border-red-400' : ''
+              }`}
+            />
+            {errors.name && (
+              <p className="text-[10px] text-red-500 font-bold absolute bottom-[-16px] left-[10px]">{errors.name}</p>
+            )}
+          </div>
+
           {/* Email ID */}
           <div className="flex flex-col relative" style={{ height: '41px' }}>
             <input
@@ -138,6 +162,22 @@ const LoginPage = () => {
               <p className="text-[10px] text-red-500 font-bold absolute bottom-[-16px] left-[10px]">{errors.password}</p>
             )}
           </div>
+
+          {/* Confirm Password */}
+          <div className="flex flex-col relative" style={{ height: '41px' }}>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={form.confirmPassword}
+              onChange={(e) => setForm((p) => ({ ...p, confirmPassword: e.target.value }))}
+              className={`w-full bg-transparent border-b border-[#C7C7C7] p-[10px] text-sm text-[#1A1A1A] placeholder-[#9CA3AF] outline-none transition-all duration-150 rounded-none focus:border-[#5B51DE] h-[41px] ${
+                errors.confirmPassword ? 'border-red-400' : ''
+              }`}
+            />
+            {errors.confirmPassword && (
+              <p className="text-[10px] text-red-500 font-bold absolute bottom-[-16px] left-[10px]">{errors.confirmPassword}</p>
+            )}
+          </div>
         </div>
 
         {/* Submit Button absolute positioned per Figma specs */}
@@ -159,10 +199,10 @@ const LoginPage = () => {
           {loading ? (
             <>
               <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-              Logging In…
+              Creating Account…
             </>
           ) : (
-            'Login'
+            'Sign Up'
           )}
         </button>
       </form>
@@ -170,4 +210,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

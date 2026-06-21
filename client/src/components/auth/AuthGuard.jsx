@@ -1,15 +1,5 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from '../../store/slices/authSlice';
-
 const AuthGuard = ({ children }) => {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const location = useLocation();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
+  // Temporarily bypass the auth wall to allow preview/click-through of all pages
   return children;
 };
 

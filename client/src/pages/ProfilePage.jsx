@@ -1,90 +1,92 @@
-import { useSelector } from 'react-redux';
+import { User, LogOut, ChevronRight, Shield, Bell, HelpCircle } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Film, Ticket, Settings, LogOut, ChevronRight, User as UserIcon } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
-import { selectUser } from '../store/slices/authSlice';
-import { getInitials } from '../utils/helpers';
 import Header from '../components/layout/Header';
+import { logout } from '../store/slices/authSlice';
+import toast from 'react-hot-toast';
 
-const MenuRow = ({ icon: Icon, label, sublabel, onClick, danger = false }) => (
+const ProfileItem = ({ icon: Icon, label, onClick }) => (
   <button
     onClick={onClick}
-    className="w-full flex items-center gap-3 py-3.5 px-4 rounded-xl hover:bg-dark-700 active:scale-98 transition-all duration-150"
+    className="w-full flex items-center justify-between py-3.5 px-4.5 bg-white border border-[#E5E7EB] rounded-2xl shadow-sm hover:border-[#5B51DE] transition-all duration-150 active:scale-[0.99]"
   >
-    <div className={`p-2 rounded-xl ${danger ? 'bg-red-500/10' : 'bg-brand-500/10'}`}>
-      <Icon size={16} className={danger ? 'text-red-400' : 'text-brand-400'} />
+    <div className="flex items-center gap-3">
+      <div className="p-2 rounded-xl bg-[#EEF0FF] text-[#5B51DE]">
+        <Icon size={16} />
+      </div>
+      <span className="text-xs font-bold text-[#1A1A1A]">{label}</span>
     </div>
-    <div className="flex-1 text-left">
-      <p className={`text-sm font-medium ${danger ? 'text-red-400' : 'text-white'}`}>{label}</p>
-      {sublabel && <p className="text-[10px] text-gray-500">{sublabel}</p>}
-    </div>
-    <ChevronRight size={14} className="text-gray-600" />
+    <ChevronRight size={15} className="text-[#9CA3AF]" />
   </button>
 );
 
 const ProfilePage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector(selectUser);
-  const { signOut, isAuthenticated } = useAuth();
+  const { user } = useSelector((s) => s.auth);
 
-  if (!isAuthenticated) {
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success('Logged out successfully');
+    navigate('/login');
+  };
+
+  if (!user) {
     return (
-      <div className="page-container flex flex-col items-center justify-center px-8 gap-4">
-        <div className="w-20 h-20 rounded-full bg-dark-700 flex items-center justify-center">
-          <UserIcon size={32} className="text-gray-600" />
+      <div className="page-container bg-[#F7F8FD]">
+        <Header title="My Profile" showBack={false} />
+        
+        <div className="flex flex-col items-center justify-center py-20 px-8 text-center animate-fade-in">
+          <div className="w-16 h-16 rounded-full bg-[#EEF0FF] border border-[#C7C3F7] flex items-center justify-center mb-4.5 shadow-sm">
+            <User size={28} className="text-[#5B51DE]" />
+          </div>
+          <h3 className="font-display font-bold text-sm text-[#1A1A1A] mb-1.5">Sign In Required</h3>
+          <p className="text-xs text-[#6B7280] font-semibold max-w-[220px] leading-relaxed">
+            Please log in or create a new account to view and manage your profile details.
+          </p>
+          <button 
+            onClick={() => navigate('/login')} 
+            className="btn-brand mt-5 py-3 px-6 shadow-md shadow-[#5B51DE]/25 font-bold rounded-xl bg-[#5B51DE] text-white hover:bg-[#4843C8] transition-all duration-150 active:scale-95 text-xs"
+          >
+            Go to Sign In
+          </button>
         </div>
-        <h2 className="font-display font-bold text-xl text-white">Sign In to CineBook</h2>
-        <p className="text-sm text-gray-400 text-center">Access your tickets, bookings, and profile.</p>
-        <button className="btn-brand w-full" onClick={() => navigate('/login')}>Sign In</button>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <Header title="Profile" showBack={false} />
+    <div className="page-container bg-[#F7F8FD]">
+      <Header title="My Profile" showBack={false} />
 
-      {/* Avatar card */}
-      <div className="mx-5 my-4 card p-5 flex items-center gap-4">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-display font-bold text-xl shadow-brand">
-          {getInitials(user?.name)}
+      {/* User Info Header */}
+      <div className="mx-5 my-5 flex items-center gap-4 p-4.5 bg-white border border-[#E5E7EB] rounded-2xl shadow-sm">
+        <div className="w-14 h-14 rounded-full bg-[#EEF0FF] border-2 border-[#C7C3F7]/50 flex items-center justify-center text-[#5B51DE] font-bold text-lg shadow-sm">
+          {user?.name?.slice(0, 2).toUpperCase() || 'U'}
         </div>
-        <div className="flex-1 min-w-0">
-          <h2 className="font-display font-bold text-lg text-white truncate">{user?.name}</h2>
-          <p className="text-xs text-gray-400 truncate">{user?.email}</p>
-          <span className="badge-brand text-[9px] mt-1">{user?.role || 'Member'}</span>
+        <div className="min-w-0">
+          <h2 className="text-sm font-bold text-[#1A1A1A] truncate">{user?.name || 'CineBook User'}</h2>
+          <p className="text-[10px] text-[#6B7280] font-semibold truncate mt-0.5">{user?.email || 'user@cinebook.app'}</p>
         </div>
       </div>
 
-      {/* Menu */}
-      <div className="mx-5 card p-2 space-y-0.5">
-        <MenuRow
-          icon={Ticket}
-          label="My Bookings"
-          sublabel="View your active & past tickets"
-          onClick={() => navigate('/bookings')}
-        />
-        <MenuRow
-          icon={Film}
-          label="Browse Movies"
-          sublabel="Discover what's showing"
-          onClick={() => navigate('/movies')}
-        />
-        <MenuRow
-          icon={Settings}
-          label="Settings"
-          sublabel="Notifications, preferences"
-          onClick={() => {}}
-        />
+      {/* Menu Options */}
+      <div className="mx-5 space-y-3">
+        <ProfileItem icon={Shield} label="Account Security" onClick={() => {}} />
+        <ProfileItem icon={Bell} label="Notifications" onClick={() => {}} />
+        <ProfileItem icon={HelpCircle} label="Help & Support" onClick={() => {}} />
       </div>
 
-      {/* Logout */}
-      <div className="mx-5 mt-3 card p-2">
-        <MenuRow icon={LogOut} label="Sign Out" danger onClick={signOut} />
+      {/* Logout button */}
+      <div className="mx-5 mt-6">
+        <button
+          onClick={handleLogout}
+          className="w-full py-3.5 rounded-2xl border border-red-200 text-red-500 hover:bg-red-50 text-xs font-bold transition-all duration-150 active:scale-95 flex items-center justify-center gap-2 shadow-sm"
+        >
+          <LogOut size={15} />
+          Sign Out Account
+        </button>
       </div>
-
-      {/* App version */}
-      <p className="text-center text-[10px] text-gray-700 mt-6 pb-4">CineBook v1.0.0 · Built with ❤️</p>
     </div>
   );
 };

@@ -9,16 +9,16 @@ export default {
       colors: {
         // Brand palette
         brand: {
-          50:  '#f3f0ff',
-          100: '#e9e3ff',
-          200: '#d5caff',
-          300: '#b8a4ff',
-          400: '#9775ff',
-          500: '#7c4dff',  // Primary purple
-          600: '#6c35f5',
-          700: '#5a22d9',
-          800: '#4a1cb5',
-          900: '#3d1893',
+          50:  '#eef0ff',
+          100: '#e0caff',
+          200: '#c7c3f7',
+          300: '#a59df2',
+          400: '#8175eb',
+          500: '#5B51DE',  // Royal Purple
+          600: '#4843c8',
+          700: '#3732b3',
+          800: '#28239e',
+          900: '#1b178a',
         },
         dark: {
           900: '#0a0a0f',  // Deepest background
@@ -76,10 +76,10 @@ export default {
         },
       },
       boxShadow: {
-        'brand': '0 4px 24px rgba(124, 77, 255, 0.3)',
-        'brand-lg': '0 8px 40px rgba(124, 77, 255, 0.4)',
-        'card': '0 2px 16px rgba(0,0,0,0.4)',
-        'card-hover': '0 8px 32px rgba(0,0,0,0.6)',
+        'brand': '0 4px 18px rgba(91, 81, 222, 0.25)',
+        'brand-lg': '0 8px 32px rgba(91, 81, 222, 0.35)',
+        'card': '0 4px 20px rgba(0, 0, 0, 0.05)',
+        'card-hover': '0 10px 25px rgba(0, 0, 0, 0.08)',
       },
       borderRadius: {
         '2xl': '1rem',

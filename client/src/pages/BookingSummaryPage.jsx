@@ -13,11 +13,11 @@ import { selectSelectedSeatObjects, selectSeatCount } from '../store/slices/seat
 import { formatCurrency, formatDate } from '../utils/helpers';
 
 const RowItem = ({ label, value, highlight = false, sub = false }) => (
-  <div className={`flex items-center justify-between py-2 ${sub ? 'pl-3' : ''}`}>
-    <span className={`text-sm ${highlight ? 'font-semibold text-white' : sub ? 'text-xs text-gray-500' : 'text-gray-300'}`}>
+  <div className={`flex items-center justify-between py-2.5 ${sub ? 'pl-3' : ''}`}>
+    <span className={`text-xs ${highlight ? 'font-bold text-[#1A1A1A]' : sub ? 'font-medium text-[#6B7280]' : 'font-semibold text-[#1A1A1A]'}`}>
       {label}
     </span>
-    <span className={`font-medium ${highlight ? 'text-brand-400 text-base font-display font-bold' : sub ? 'text-xs text-gray-400' : 'text-sm text-white'}`}>
+    <span className={`font-semibold ${highlight ? 'text-[#5B51DE] text-base font-display font-bold' : sub ? 'text-[#6B7280]' : 'text-[#1A1A1A]'}`}>
       {value}
     </span>
   </div>
@@ -37,49 +37,49 @@ const BookingSummaryPage = () => {
 
   if (!selectedShowtime || seatCount === 0) {
     return (
-      <div className="page-container flex flex-col items-center justify-center gap-4">
+      <div className="page-container bg-[#F7F8FD] flex flex-col items-center justify-center gap-4">
         <p className="text-4xl">🎭</p>
-        <p className="text-gray-400 text-sm">No booking in progress.</p>
+        <p className="text-[#6B7280] text-sm">No booking in progress.</p>
         <button className="btn-brand" onClick={() => navigate('/')}>Go Home</button>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
+    <div className="page-container bg-[#F7F8FD]">
       <Header title="Booking Summary" />
 
       {/* Movie info card */}
-      <div className="mx-5 my-4 card overflow-hidden">
-        <div className="flex gap-3 p-4">
+      <div className="mx-5 my-4 card bg-white border border-[#E5E7EB] shadow-sm overflow-hidden">
+        <div className="flex gap-4.5 p-4.5">
           {selectedMovie?.posterUrl && (
             <img
               src={selectedMovie.posterUrl}
               alt={selectedMovie.title}
-              className="w-16 h-24 object-cover rounded-xl flex-shrink-0"
+              className="w-16 h-24 object-cover rounded-xl border border-[#E5E7EB] shadow-sm flex-shrink-0"
             />
           )}
           <div className="flex-1 min-w-0">
-            <h2 className="font-display font-bold text-base text-white leading-tight mb-1">
+            <h2 className="font-display font-bold text-sm text-[#1A1A1A] leading-tight mb-1">
               {selectedMovie?.title}
             </h2>
-            <p className="text-xs text-gray-400 mb-2">{selectedShowtime.theater?.name}</p>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px]">
+            <p className="text-[11px] text-[#6B7280] font-medium mb-2.5">{selectedShowtime.theater?.name}</p>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[10px] font-semibold">
               <div>
-                <span className="text-gray-500">Date</span>
-                <p className="text-white font-medium">{formatDate(selectedShowtime.date)}</p>
+                <span className="text-[#9CA3AF] uppercase">Date</span>
+                <p className="text-[#1A1A1A] font-bold">{formatDate(selectedShowtime.date)}</p>
               </div>
               <div>
-                <span className="text-gray-500">Time</span>
-                <p className="text-white font-medium">{selectedShowtime.time}</p>
+                <span className="text-[#9CA3AF] uppercase">Time</span>
+                <p className="text-[#1A1A1A] font-bold">{selectedShowtime.time}</p>
               </div>
               <div>
-                <span className="text-gray-500">Format</span>
-                <p className="text-brand-400 font-medium">{selectedShowtime.format}</p>
+                <span className="text-[#9CA3AF] uppercase">Format</span>
+                <p className="text-[#5B51DE] font-bold">{selectedShowtime.format}</p>
               </div>
               <div>
-                <span className="text-gray-500">Screen</span>
-                <p className="text-white font-medium">Screen {selectedShowtime.screen}</p>
+                <span className="text-[#9CA3AF] uppercase">Screen</span>
+                <p className="text-[#1A1A1A] font-bold">Screen {selectedShowtime.screen}</p>
               </div>
             </div>
           </div>
@@ -87,30 +87,30 @@ const BookingSummaryPage = () => {
       </div>
 
       {/* Selected seats */}
-      <div className="mx-5 mb-4 card p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Ticket size={14} className="text-brand-400" />
-          <h3 className="text-sm font-semibold text-white">Selected Seats</h3>
-          <span className="badge-brand ml-auto">{seatCount} ticket{seatCount > 1 ? 's' : ''}</span>
+      <div className="mx-5 mb-4 card bg-white border border-[#E5E7EB] p-4.5 shadow-sm">
+        <div className="flex items-center gap-2 mb-3.5">
+          <Ticket size={14} className="text-[#5B51DE]" />
+          <h3 className="text-xs font-bold text-[#1A1A1A] uppercase tracking-wider">Selected Seats</h3>
+          <span className="badge-brand ml-auto font-bold">{seatCount} ticket{seatCount > 1 ? 's' : ''}</span>
         </div>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {seatObjects.map((seat) => (
-            <div key={seat.seatId} className="flex flex-col items-center bg-brand-500/10 border border-brand-500/30 rounded-xl px-3 py-1.5">
-              <span className="text-brand-400 font-bold text-sm">{seat.seatId}</span>
-              <span className="text-[9px] text-gray-500">Row {seat.row}</span>
+            <div key={seat.seatId} className="flex flex-col items-center bg-[#EEF0FF] border border-[#C7C3F7] rounded-xl px-3 py-1.5 min-w-[50px] shadow-sm">
+              <span className="text-[#5B51DE] font-bold text-sm leading-none mb-0.5">{seat.seatId}</span>
+              <span className="text-[8px] font-bold text-[#6B7280]">Row {seat.row}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Price breakdown */}
-      <div className="mx-5 mb-4 card p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Tag size={14} className="text-brand-400" />
-          <h3 className="text-sm font-semibold text-white">Price Breakdown</h3>
+      <div className="mx-5 mb-4 card bg-white border border-[#E5E7EB] p-4.5 shadow-sm">
+        <div className="flex items-center gap-2 mb-3.5">
+          <Tag size={14} className="text-[#5B51DE]" />
+          <h3 className="text-xs font-bold text-[#1A1A1A] uppercase tracking-wider">Price Breakdown</h3>
         </div>
 
-        <div className="divide-y divide-dark-600/40">
+        <div className="divide-y divide-[#E5E7EB]">
           <RowItem
             label={`Ticket × ${seatCount}`}
             value={`${formatCurrency(ticketPrice)} × ${seatCount}`}
@@ -127,19 +127,19 @@ const BookingSummaryPage = () => {
         </div>
 
         {/* Info note */}
-        <div className="flex items-start gap-2 mt-3 p-3 bg-brand-500/5 rounded-xl border border-brand-500/20">
-          <Info size={13} className="text-brand-400 flex-shrink-0 mt-0.5" />
-          <p className="text-[10px] text-gray-400 leading-relaxed">
-            Booking fee is non-refundable. Tickets are non-transferable. Please carry a valid ID for verification.
+        <div className="flex items-start gap-2 mt-4 p-3 bg-[#EEF0FF]/40 rounded-xl border border-[#C7C3F7]/50 shadow-sm">
+          <Info size={13} className="text-[#5B51DE] flex-shrink-0 mt-0.5" />
+          <p className="text-[10px] text-[#6B7280] font-semibold leading-relaxed">
+            Booking fee is non-refundable. Tickets are non-transferable. Please carry a valid ID for verification at the theater.
           </p>
         </div>
       </div>
 
       {/* CTA */}
-      <div className="sticky bottom-20 px-5 pb-5">
+      <div className="sticky bottom-20 px-5 pb-5 mt-4">
         <button
           onClick={() => navigate('/checkout')}
-          className="btn-brand w-full flex items-center justify-center gap-2"
+          className="btn-brand w-full flex items-center justify-center gap-2 shadow-lg shadow-[#5B51DE]/25"
         >
           <CreditCard size={18} />
           Proceed to Payment · {formatCurrency(grandTotal)}

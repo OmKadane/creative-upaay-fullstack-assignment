@@ -10,23 +10,23 @@ const ScreenIndicator = () => (
   <div className="mb-6 px-4">
     <div className="relative flex flex-col items-center">
       {/* Curved screen glow bar */}
-      <div className="w-4/5 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent rounded-full shadow-brand mb-1" />
-      <div className="w-3/5 h-1 bg-gradient-to-r from-transparent via-brand-400/40 to-transparent rounded-full" />
-      <p className="text-[10px] text-gray-500 mt-2 tracking-widest uppercase font-medium">Screen</p>
+      <div className="w-4/5 h-1 bg-gradient-to-r from-transparent via-[#5B51DE] to-transparent rounded-full shadow-[0_2px_8px_rgba(91,81,222,0.25)] mb-1" />
+      <div className="w-3/5 h-0.5 bg-gradient-to-r from-transparent via-[#5B51DE]/30 to-transparent rounded-full" />
+      <p className="text-[9px] text-[#9CA3AF] mt-2 tracking-widest uppercase font-bold">Screen This Way</p>
     </div>
   </div>
 );
 
 const SeatLegend = () => (
-  <div className="flex items-center justify-center gap-5 py-4 px-5 border-t border-dark-600/40 mt-2">
+  <div className="flex items-center justify-center gap-5 py-4 px-5 border-t border-[#E5E7EB] mt-3 bg-white">
     {[
-      { label: 'Available', className: 'w-5 h-5 rounded-md border border-dark-400 bg-dark-500' },
-      { label: 'Selected', className: 'w-5 h-5 rounded-md bg-brand-500 shadow-brand' },
-      { label: 'Occupied', className: 'w-5 h-5 rounded-md bg-dark-600 border border-dark-600' },
+      { label: 'Available', className: 'w-4.5 h-4.5 rounded-md border border-[#D1D5DB] bg-white' },
+      { label: 'Selected', className: 'w-4.5 h-4.5 rounded-md bg-[#5B51DE]' },
+      { label: 'Occupied', className: 'w-4.5 h-4.5 rounded-md bg-[#E5E7EB] border border-[#E5E7EB]' },
     ].map(({ label, className }) => (
       <div key={label} className="flex items-center gap-1.5">
         <div className={className} />
-        <span className="text-[10px] text-gray-400">{label}</span>
+        <span className="text-[10px] text-[#6B7280] font-semibold">{label}</span>
       </div>
     ))}
   </div>
@@ -95,7 +95,7 @@ const SeatMatrix = ({ seats }) => {
           {/* Column numbers header */}
           <div className="flex items-center mb-1 ml-6 gap-1">
             {Array.from({ length: COLS }, (_, i) => (
-              <div key={i} className="w-7 text-center text-[9px] text-gray-600 font-medium">
+              <div key={i} className="w-7 text-center text-[9px] text-[#9CA3AF] font-bold">
                 {i + 1}
               </div>
             ))}
@@ -105,7 +105,7 @@ const SeatMatrix = ({ seats }) => {
           {ROWS.map((row) => (
             <div key={row} className="flex items-center gap-1 mb-1.5">
               {/* Row label */}
-              <div className="w-5 text-[10px] text-gray-500 font-medium text-center flex-shrink-0">
+              <div className="w-5 text-[10px] text-[#9CA3AF] font-bold text-center flex-shrink-0">
                 {row}
               </div>
 

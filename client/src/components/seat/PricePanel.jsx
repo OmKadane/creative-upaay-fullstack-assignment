@@ -1,43 +1,40 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { selectSelectedSeats, selectSeatCount } from '../../store/slices/seatSlice';
-import { selectGrandTotal, selectCurrentTotalPrice, selectTicketPrice } from '../../store/slices/bookingSlice';
+import { selectGrandTotal, selectTicketPrice } from '../../store/slices/bookingSlice';
 import { formatCurrency } from '../../utils/helpers';
 import { ShoppingBag } from 'lucide-react';
 
 const PricePanel = () => {
   const navigate = useNavigate();
-  const selectedSeats = useSelector(selectSelectedSeats);
   const seatCount = useSelector(selectSeatCount);
-  const currentTotal = useSelector(selectCurrentTotalPrice);
   const grandTotal = useSelector(selectGrandTotal);
   const ticketPrice = useSelector(selectTicketPrice);
 
   return (
-    <div className="sticky top-0 z-30 glass border-b border-dark-600/30 px-5 py-3 flex items-center justify-between">
+    <div className="sticky top-0 z-30 bg-white border-b border-[#E5E7EB] px-5 py-3.5 flex items-center justify-between shadow-sm">
       <div>
-        <p className="text-xs text-gray-400 mb-0.5">
+        <p className="text-xs text-[#6B7280] font-medium mb-0.5">
           {seatCount > 0 ? `${seatCount} seat${seatCount > 1 ? 's' : ''} selected` : 'No seats selected'}
         </p>
-        {seatCount > 0 && (
+        {seatCount > 0 ? (
           <div className="flex items-baseline gap-1">
-            <span className="text-xl font-display font-bold text-brand-400">
+            <span className="text-xl font-display font-bold text-[#5B51DE]">
               {formatCurrency(grandTotal)}
             </span>
-            <span className="text-[10px] text-gray-500">incl. fees</span>
+            <span className="text-[10px] text-[#6B7280] font-medium">incl. fees</span>
           </div>
-        )}
-        {seatCount === 0 && (
-          <span className="text-sm text-gray-500">{formatCurrency(ticketPrice)} / seat</span>
+        ) : (
+          <span className="text-sm font-bold text-[#1A1A1A]">{formatCurrency(ticketPrice)} / seat</span>
         )}
       </div>
 
       {seatCount > 0 && (
         <button
           onClick={() => navigate('/booking-summary')}
-          className="btn-brand flex items-center gap-2 py-2.5 px-4 text-sm"
+          className="btn-brand flex items-center gap-2 py-2.5 px-4 text-xs font-bold shadow-md shadow-[#5B51DE]/25"
         >
-          <ShoppingBag size={15} />
+          <ShoppingBag size={14} />
           Book Now
         </button>
       )}

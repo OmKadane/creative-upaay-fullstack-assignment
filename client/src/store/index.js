@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import storageModule from 'redux-persist/lib/storage';
+const storage = storageModule.default || storageModule;
 import { combineReducers } from 'redux';
 
 import authReducer from './slices/authSlice';
