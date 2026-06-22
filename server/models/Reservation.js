@@ -102,6 +102,5 @@ reservationSchema.pre('save', function (next) {
 // Indexes for performance
 reservationSchema.index({ user: 1, createdAt: -1 });
 reservationSchema.index({ showtime: 1 });
-reservationSchema.index({ bookingCode: 1 }, { unique: true });
 
 module.exports = mongoose.model('Reservation', reservationSchema);
