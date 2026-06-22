@@ -143,13 +143,24 @@ const SelectTheatrePage = () => {
       <div className="w-[337px] h-px left-[23px] top-[331px] absolute bg-[#CED6E0]"></div>
 
       {/* Theatres List */}
-      <div className="absolute top-[360px] left-0 w-full h-[410px] overflow-y-auto scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div 
+        className="absolute overflow-y-auto scrollbar-none" 
+        style={{ 
+          top: '360px', 
+          left: '18px', 
+          width: '339px', 
+          height: '316px', 
+          opacity: 1, 
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none' 
+        }}
+      >
         <div className="relative" style={{ height: `${uniqueTheaters.length * 81}px` }}>
           {uniqueTheaters.map((theater, i) => (
             <div
               key={theater._id || i}
-              className="w-80 h-20 left-[18px] absolute cursor-pointer"
-              style={{ top: `${i * 81}px` }}
+              className="w-full h-20 absolute cursor-pointer"
+              style={{ top: `${i * 81}px`, left: '0px' }}
               onClick={() => handleSelectTheater(theater._id)}
             >
               <img className="size-20 left-0 top-0 absolute rounded-[5px] object-cover" src={theater.logoUrl || "https://placehold.co/73x73"} alt={theater.name} />
