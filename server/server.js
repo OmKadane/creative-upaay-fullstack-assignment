@@ -19,6 +19,9 @@ const PORT = process.env.PORT || 5000;
 // Connect to MongoDB
 connectDB();
 
+// Trust Render's proxy (required for express-rate-limit behind load balancers)
+app.set('trust proxy', 1);
+
 // Security & utility middleware
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true }));
