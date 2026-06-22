@@ -25,6 +25,9 @@ const theaterSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'Base ticket price is required'],
     },
+    maxPrice: {
+      type: Number,
+    },
     isActive: {
       type: Boolean,
       default: true,

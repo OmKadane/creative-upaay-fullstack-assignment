@@ -11,6 +11,24 @@ import movieTheatre1 from '../assets/Movie-Theatre-1-Poster.svg';
 import movieTheatre2 from '../assets/Movie-Theatre-2-Poster.svg';
 import movieTheatre3 from '../assets/Movie-Theatre-3-Poster.svg';
 import movieTheatre4 from '../assets/Movie-Theatre-4-Poster.png';
+import logo1 from '../assets/theater-logo-1.png';
+import logo2 from '../assets/theater-logo-2.png';
+import logo3 from '../assets/theater-logo-3.png';
+import logo4 from '../assets/theater-logo-4.png';
+
+const logoMap = {
+  // Original database names
+  'PVR: Phoenix Palladium': logo1,
+  'INOX: Lido Mall': logo2,
+  'Miraj Cinemas: City Centre': logo3,
+  'Cinepolis: DLF Promenade': logo4,
+  
+  // Alternative/Mock names
+  'The Grandview': logo1,
+  'Play Loft': logo2,
+  'CinemaOne': logo3,
+  'Cinemount': logo4
+};
 
 const SelectTheatrePage = () => {
   const { movieId } = useParams();
@@ -68,14 +86,31 @@ const SelectTheatrePage = () => {
     { _id: 't4', name: 'Cinemount', location: { city: 'Baclaran, Paranaque City' }, minPrice: 350 },
   ];
 
+  // Fixed display order to guarantee correct row placement
+  const theaterOrder = ['The Grandview', 'Play Loft', 'CinemaOne', 'Cinemount'];
+
   let uniqueTheaters = showtimes.reduce((acc, st) => {
     if (!st.theater) return acc;
     const existing = acc.find((t) => t._id === st.theater._id);
     if (!existing) {
-      acc.push({ ...st.theater, minPrice: st.theater.basePrice });
+      acc.push({ 
+        ...st.theater, 
+        minPrice: st.theater.basePrice,
+        maxPrice: st.theater.maxPrice
+      });
     }
     return acc;
   }, []);
+
+  // Sort by fixed display order
+  uniqueTheaters.sort((a, b) => {
+    const ai = theaterOrder.indexOf(a.name);
+    const bi = theaterOrder.indexOf(b.name);
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
 
   if (uniqueTheaters.length === 0 && movie) {
     uniqueTheaters = mockTheaters;
@@ -147,8 +182,8 @@ const SelectTheatrePage = () => {
         className="absolute overflow-y-auto scrollbar-none" 
         style={{ 
           top: '360px', 
-          left: '18px', 
-          width: '339px', 
+          left: '19px', 
+          width: '338px', 
           height: '316px', 
           opacity: 1, 
           scrollbarWidth: 'none', 
@@ -159,16 +194,20 @@ const SelectTheatrePage = () => {
           {uniqueTheaters.map((theater, i) => (
             <div
               key={theater._id || i}
-              className="w-full h-20 absolute cursor-pointer"
+              className="w-full h-[73px] absolute cursor-pointer"
               style={{ top: `${i * 81}px`, left: '0px' }}
               onClick={() => handleSelectTheater(theater._id)}
             >
-              <img className="size-20 left-0 top-0 absolute rounded-[5px] object-cover" src={theater.logoUrl || "https://placehold.co/73x73"} alt={theater.name} />
-              <div className="left-[85px] top-[4px] absolute justify-start text-neutral-900 text-sm font-semibold font-['Inter']">{theater.name}</div>
-              <div className="left-[101px] top-[25px] absolute justify-start text-slate-500 text-xs font-normal font-['Inter']">{theater.location?.city || theater.location?.address || 'Unknown'}</div>
+              <img className="w-[73px] h-[73px] left-0 top-0 absolute rounded-[5px] object-cover" src={logoMap[theater.name] || theater.logoUrl || "https://placehold.co/73x73"} alt={theater.name} />
+              <div className="left-[85px] top-[4px] absolute justify-start text-[#121212] text-sm font-semibold font-['Inter']" style={{ lineHeight: '100%' }}>{theater.name}</div>
+              <div className="left-[101px] top-[25px] absolute justify-start text-[#64748B] text-xs font-normal font-['Inter'] whitespace-nowrap" style={{ lineHeight: '100%' }}>
+                {theater.location?.address && theater.location?.city
+                  ? `${theater.location.address}, ${theater.location.city}`
+                  : theater.location?.city || theater.location?.address || 'Unknown'}
+              </div>
               <img src={locationIcon} className="w-[10px] h-[14px] left-[85px] top-[26px] absolute" alt="location" />
               <div className="w-auto h-5 left-[85px] top-[53px] absolute rounded-[5px]">
-                <div className="left-0 top-[-4px] absolute justify-start text-slate-500 text-sm font-semibold font-['Inter'] whitespace-nowrap">
+                <div className="left-0 top-[-4px] absolute justify-start text-[#64748B] text-sm font-semibold font-['Inter'] whitespace-nowrap" style={{ lineHeight: '100%' }}>
                   {theater.maxPrice ? `₹${theater.minPrice} - ₹${theater.maxPrice}` : `₹${theater.minPrice}`}
                 </div>
               </div>

@@ -39,7 +39,7 @@ const getTheaterShowtimes = async (req, res) => {
 
   const showtimes = await Showtime.find(filter)
     .populate('movie', 'title posterUrl duration formats')
-    .populate('theater', 'name location basePrice')
+    .populate('theater', 'name location basePrice maxPrice')
     .sort({ date: 1, time: 1 });
 
   res.status(200).json({ success: true, count: showtimes.length, data: showtimes });
@@ -63,7 +63,7 @@ const getShowtimesForMovie = async (req, res) => {
   if (format) filter.format = format;
 
   const showtimes = await Showtime.find(filter)
-    .populate('theater', 'name location basePrice')
+    .populate('theater', 'name location basePrice maxPrice')
     .sort({ date: 1, time: 1 });
 
   res.status(200).json({ success: true, count: showtimes.length, data: showtimes });

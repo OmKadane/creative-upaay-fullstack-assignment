@@ -1,10 +1,9 @@
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
 const Movie = require('../models/Movie');
 const Theater = require('../models/Theater');
 const Showtime = require('../models/Showtime');
+
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/cinebook';
 
@@ -141,55 +140,57 @@ const movies = [
 
 const theaters = [
   {
-    name: 'PVR: Phoenix Palladium',
+    name: 'The Grandview',
     location: {
-      address: 'Phoenix Palladium Mall, Senapati Bapat Marg',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      pincode: '400013',
+      address: 'Camp Aguinaldo',
+      city: 'Quezon City',
+      state: 'Metro Manila',
+      pincode: '1110',
     },
     screens: 8,
     amenities: ['4DX', 'IMAX', 'Dolby Atmos', 'Recliner Seats'],
-    basePrice: 350,
+    basePrice: 320,
+    maxPrice: 450,
     isActive: true,
   },
   {
-    name: 'INOX: Lido Mall',
+    name: 'Play Loft',
     location: {
-      address: 'Lido Mall, Kasturba Road',
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      pincode: '560001',
+      address: 'Aurora Boulevard',
+      city: 'Santa Mesa',
+      state: 'Metro Manila',
+      pincode: '1008',
     },
     screens: 6,
     amenities: ['IMAX', 'Dolby Atmos', 'Premium Seating'],
-    basePrice: 280,
+    basePrice: 300,
+    maxPrice: 430,
     isActive: true,
   },
   {
-    name: 'Cinepolis: DLF Promenade',
+    name: 'CinemaOne',
     location: {
-      address: 'DLF Promenade Mall, Vasant Kunj',
-      city: 'New Delhi',
-      state: 'Delhi',
-      pincode: '110070',
+      address: 'A Cruz',
+      city: 'Pasay City',
+      state: 'Metro Manila',
+      pincode: '1300',
     },
     screens: 5,
     amenities: ['3D', 'Recliner Seats', 'Laser Projection'],
-    basePrice: 300,
+    basePrice: 320,
     isActive: true,
   },
   {
-    name: 'Miraj Cinemas: City Centre',
+    name: 'Cinemount',
     location: {
-      address: 'City Centre Mall, Rajnagar',
-      city: 'Ghaziabad',
-      state: 'Uttar Pradesh',
-      pincode: '201002',
+      address: 'Baclaran',
+      city: 'Paranaque City',
+      state: 'Metro Manila',
+      pincode: '1700',
     },
     screens: 4,
     amenities: ['2D', '3D', 'Standard Seating'],
-    basePrice: 200,
+    basePrice: 350,
     isActive: true,
   },
 ];
@@ -241,21 +242,10 @@ const seedDatabase = async () => {
     console.log('✅ Connected to MongoDB');
 
     // Clear existing data
-    await User.deleteMany({});
     await Movie.deleteMany({});
     await Theater.deleteMany({});
     await Showtime.deleteMany({});
     console.log('🗑️  Cleared existing data');
-
-    // Create demo user
-    const salt = await bcrypt.genSalt(12);
-    const hashedPassword = await bcrypt.hash('Demo@1234', salt);
-    const demoUser = await User.create({
-      name: 'Demo User',
-      email: 'demo@cinebook.app',
-      password: hashedPassword,
-    });
-    console.log('👤 Demo user created:', demoUser.email);
 
     // Insert movies
     const createdMovies = await Movie.insertMany(movies);
@@ -284,9 +274,6 @@ const seedDatabase = async () => {
     console.log(`\n🕐 ${totalShowtimes} showtimes created with seat maps`);
 
     console.log('\n✅ Database seeded successfully!');
-    console.log('\n📋 Demo Credentials:');
-    console.log('   Email: demo@cinebook.app');
-    console.log('   Password: Demo@1234');
 
     mongoose.disconnect();
   } catch (error) {
