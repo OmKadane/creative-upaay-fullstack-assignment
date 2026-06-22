@@ -137,7 +137,20 @@ const HomePage = () => {
     <div className="page-container bg-[#F7F8FD] !pt-0 !pb-[85px]">
       {/* Hero Poster Header */}
       <div
-        className="relative overflow-hidden mb-6"
+        onClick={() => {
+          const firstMovie = nowShowing[0] || {};
+          navigate(`/movies/${firstMovie._id || 'meg-2'}`, {
+            state: {
+              movie: {
+                ...firstMovie,
+                title: 'Meg 2: The Trench',
+                posterUrl: meg2Poster,
+                genre: ['Action', 'Sci-Fi', 'Horror']
+              }
+            }
+          });
+        }}
+        className="relative overflow-hidden mb-6 cursor-pointer"
         style={{
           width: '390px',
           height: '220px',

@@ -63,7 +63,7 @@ const BottomNav = () => {
     >
       {navItems.map(({ path, label, renderIcon }) => {
         const isActive = path === '/home'
-          ? (location.pathname === '/' || location.pathname === '/home')
+          ? (location.pathname === '/' || location.pathname === '/home' || location.pathname.startsWith('/movies/'))
           : location.pathname.startsWith(path);
 
         const iconColor = isActive ? '#4F46E5' : '#94A3B8';

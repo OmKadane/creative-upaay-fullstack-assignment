@@ -9,7 +9,7 @@ const MovieCard = ({ movie, variant = 'portrait' }) => {
   if (variant === 'landscape') {
     return (
       <button
-        onClick={() => navigate(`/movies/${movie._id}`)}
+        onClick={() => navigate(`/movies/${movie._id}`, { state: { movie } })}
         className="card card-hover flex-shrink-0 w-80 flex overflow-hidden animate-fade-in active:scale-95 transition-transform duration-150 text-left bg-white border border-[#E5E7EB]"
       >
         <div className="relative w-28 flex-shrink-0">
@@ -58,7 +58,7 @@ const MovieCard = ({ movie, variant = 'portrait' }) => {
   // Portrait card (default)
   return (
     <button
-      onClick={() => navigate(`/movies/${movie._id}`)}
+      onClick={() => navigate(`/movies/${movie._id}`, { state: { movie } })}
       className="flex-shrink-0 w-[106px] h-auto text-left group animate-fade-in active:scale-95 transition-transform duration-150 flex flex-col gap-[5px]"
     >
       <div

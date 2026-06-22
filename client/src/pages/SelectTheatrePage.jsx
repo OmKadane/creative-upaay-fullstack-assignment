@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ChevronRight } from 'lucide-react';
-import locationIcon from '../assets/location.svg';
 import { getShowtimesForMovie } from '../services/bookingService';
 import { getMovieById } from '../services/movieService';
 import { setSelectedMovie } from '../store/slices/bookingSlice';
-import Header from '../components/layout/Header';
-import { getDayLabel } from '../utils/helpers';
+import meg2ScenePoster2 from '../assets/Meg-2-The-Trench-Scene-Poster2.png';
+import locationIcon from '../assets/location.svg';
+import backIcon from '../assets/back.svg';
+import movieTheatre1 from '../assets/Movie-Theatre-1-Poster.svg';
+import movieTheatre2 from '../assets/Movie-Theatre-2-Poster.svg';
+import movieTheatre3 from '../assets/Movie-Theatre-3-Poster.svg';
+import movieTheatre4 from '../assets/Movie-Theatre-4-Poster.png';
 
 const SelectTheatrePage = () => {
   const { movieId } = useParams();
@@ -16,20 +19,20 @@ const SelectTheatrePage = () => {
 
   const [movie, setMovie] = useState(null);
   const [showtimes, setShowtimes] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(0);
 
-  // Generate next 8 dates
-  const dates = Array.from({ length: 8 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
-    d.setHours(0, 0, 0, 0);
-    return d;
-  });
+  // Static dates matching Figma design
+  const dates = [
+    { day: 'Fri', date: 10 },
+    { day: 'Sat', date: 11 },
+    { day: 'Sun', date: 12 },
+    { day: 'Mon', date: 13 },
+    { day: 'Tue', date: 14 },
+    { day: 'Wed', date: 15 },
+    { day: 'Thu', date: 16 },
+  ];
 
-  useEffect(() => {
-    setSelectedDate(dates[0]);
-  }, []);
+  // No need to set selectedDate in useEffect - already initialized to 0
 
   useEffect(() => {
     const loadMovie = async () => {
@@ -45,114 +48,124 @@ const SelectTheatrePage = () => {
   }, [movieId, dispatch]);
 
   useEffect(() => {
-    if (!selectedDate) return;
     const loadShowtimes = async () => {
-      setLoading(true);
       try {
-        const res = await getShowtimesForMovie(movieId, {
-          date: selectedDate.toISOString().split('T')[0],
-        });
+        const res = await getShowtimesForMovie(movieId, {});
         setShowtimes(res.data.data);
       } catch (err) {
         console.error(err);
         setShowtimes([]);
-      } finally {
-        setLoading(false);
       }
     };
     loadShowtimes();
-  }, [movieId, selectedDate]);
+  }, [movieId]);
 
-  // Group showtimes to get unique theaters
-  const uniqueTheaters = showtimes.reduce((acc, st) => {
+  // Use mock theaters if uniqueTheaters is empty, for UI demonstration matching the user's exact snap
+  const mockTheaters = [
+    { _id: 't1', name: 'The Grandview', location: { city: 'Camp Aguinaldo, Quezon City' }, minPrice: 320, maxPrice: 450 },
+    { _id: 't2', name: 'Play Loft', location: { city: 'Aurora Boulevard, Santa Mesa' }, minPrice: 300, maxPrice: 430 },
+    { _id: 't3', name: 'CinemaOne', location: { city: 'A Cruz, Pasay City' }, minPrice: 320 },
+    { _id: 't4', name: 'Cinemount', location: { city: 'Baclaran, Paranaque City' }, minPrice: 350 },
+  ];
+
+  let uniqueTheaters = showtimes.reduce((acc, st) => {
     if (!st.theater) return acc;
     const existing = acc.find((t) => t._id === st.theater._id);
     if (!existing) {
-      acc.push({
-        ...st.theater,
-        minPrice: st.theater.basePrice, // minimum price starting value
-      });
+      acc.push({ ...st.theater, minPrice: st.theater.basePrice });
     }
     return acc;
   }, []);
 
+  if (uniqueTheaters.length === 0 && movie) {
+    uniqueTheaters = mockTheaters;
+  }
+
   const handleSelectTheater = (theaterId) => {
-    const formattedDate = selectedDate.toISOString().split('T')[0];
-    navigate(`/select-schedule/${movieId}/${theaterId}?date=${formattedDate}`);
+    navigate(`/select-schedule/${movieId}/${theaterId}`);
   };
 
-  return (
-    <div className="page-container bg-[#F7F8FD]">
-      <Header title={movie?.title || 'Select Theatre'} />
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-      {/* Date selector */}
-      <div className="py-4 px-5 bg-white border-b border-[#E5E7EB] shadow-sm">
-        <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider mb-2.5">Select Date</p>
-        <div className="scroll-x flex gap-2">
-          {dates.map((date) => {
-            const isSelected = selectedDate?.toDateString() === date.toDateString();
+  if (!movie) return <div className="w-[390px] h-[846px] relative bg-slate-50 mx-auto rounded-[5px]" />;
+
+  return (
+    <div className="w-[390px] h-[846px] relative bg-slate-50 overflow-hidden mx-auto rounded-[5px]">
+
+      {/* Background & Header */}
+      <img className="w-[390px] h-[173px] left-0 top-0 absolute object-cover rounded-t-[5px]" src={meg2ScenePoster2} alt="banner" />
+
+      {/* Back & Cancel */}
+      <div className="left-[23px] top-[44px] absolute flex items-center gap-[9px] cursor-pointer" onClick={() => navigate(-1)}>
+        <img src={backIcon} className="w-[21px] h-[21px]" alt="back" />
+        <div className="text-[#F7F8FD] text-sm font-semibold font-['Inter']">Back</div>
+      </div>
+      <div className="right-[28px] top-[46px] absolute justify-start text-[#F7F8FD] text-sm font-semibold font-['Inter'] cursor-pointer" onClick={() => navigate('/')}>Cancel</div>
+
+      {/* Movie Info */}
+      <div className="w-[336px] left-[26px] top-[98px] absolute justify-start text-[#F7F8FD] text-[20px] font-bold font-['Inter']" style={{ lineHeight: '134%' }}>Meg 2: The Trench</div>
+      <div className="w-[172px] left-[26px] top-[129px] absolute justify-start text-[#F7F8FD] text-[14px] font-normal font-['Inter'] leading-normal">Action, Sci-fi, Horror</div>
+
+      {/* Progress Bar */}
+      <div data-progress="20%" className="w-[334px] h-2 left-[26px] top-[191px] absolute bg-[#E7E7E7] rounded-3xl overflow-hidden">
+        <div className="w-[60.141px] h-full left-0 top-0 absolute bg-[#4F46E5] rounded-lg" />
+      </div>
+
+      <div className="left-[26px] top-[216px] absolute justify-start text-[#121212] text-[18px] font-bold font-['Inter'] leading-normal">Select Movie Theatre</div>
+
+      {/* Date Selector */}
+      <div className="absolute top-[256px] left-0 w-full h-[60px] overflow-x-auto scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <style>{`.scrollbar-none::-webkit-scrollbar { display: none; }`}</style>
+        <div className="relative h-full" style={{ width: `${27 + dates.length * 46}px` }}>
+          {dates.map((item, i) => {
+            const isSelected = selectedDate === i;
             return (
-              <button
-                key={date.toISOString()}
-                onClick={() => setSelectedDate(date)}
-                className={`flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-2.5 rounded-2xl transition-all duration-200 min-w-[54px] ${
-                  isSelected
-                    ? 'bg-[#5B51DE] text-white shadow shadow-[#5B51DE]/25'
-                    : 'bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#6B7280]'
-                }`}
+              <div
+                key={i}
+                className="w-[46px] h-[46px] absolute cursor-pointer"
+                style={{ left: `${27 + i * 46}px`, top: '0px' }}
+                onClick={() => setSelectedDate(i)}
               >
-                <span className={`text-[9px] font-bold uppercase ${isSelected ? 'text-[#EEF0FF]' : 'text-[#9CA3AF]'}`}>
-                  {getDayLabel(date)}
-                </span>
-                <span className={`text-base font-display font-bold leading-none ${isSelected ? 'text-white' : 'text-[#1A1A1A]'}`}>
-                  {date.getDate()}
-                </span>
-                <span className={`text-[9px] ${isSelected ? 'text-[#EEF0FF]' : 'text-[#9CA3AF]'}`}>
-                  {date.toLocaleDateString('en-IN', { month: 'short' })}
-                </span>
-              </button>
+                {/* Day label — centered over the 28px date box (left-[10px], width 28px → center at 24px) */}
+                <div className={`w-7 left-[10px] top-0 absolute text-center text-xs font-semibold font-['Inter'] ${isSelected ? 'text-indigo-600' : 'text-slate-500'}`}>
+                  {item.day}
+                </div>
+                {/* Date box with centered number */}
+                <div className={`size-7 left-[10px] top-[20px] absolute rounded-[5px] border flex items-center justify-center text-sm font-semibold font-['Inter'] ${isSelected ? 'bg-indigo-600 border-indigo-600 text-slate-50' : 'bg-slate-50 border-slate-300 text-slate-500'}`}>
+                  {item.date}
+                </div>
+              </div>
             );
           })}
         </div>
       </div>
 
-      {/* Theatres list */}
-      <div className="px-5 py-5 space-y-4">
-        <p className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider">Available Theatres</p>
-        {loading ? (
-          Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="skeleton h-28 w-full rounded-2xl" />
-          ))
-        ) : uniqueTheaters.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl border border-[#E5E7EB] p-6 shadow-sm">
-            <p className="text-3xl mb-2">🎭</p>
-            <p className="text-sm font-semibold text-[#1A1A1A]">No theaters playing this movie</p>
-            <p className="text-xs text-[#6B7280] mt-1">Try choosing another date above.</p>
-          </div>
-        ) : (
-          uniqueTheaters.map((theater) => (
-            <button
-              key={theater._id}
+      <div className="w-[337px] h-px left-[23px] top-[331px] absolute bg-[#CED6E0]"></div>
+
+      {/* Theatres List */}
+      <div className="absolute top-[360px] left-0 w-full h-[410px] overflow-y-auto scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="relative" style={{ height: `${uniqueTheaters.length * 81}px` }}>
+          {uniqueTheaters.map((theater, i) => (
+            <div
+              key={theater._id || i}
+              className="w-80 h-20 left-[18px] absolute cursor-pointer"
+              style={{ top: `${i * 81}px` }}
               onClick={() => handleSelectTheater(theater._id)}
-              className="w-full text-left bg-white border border-[#E5E7EB] rounded-2xl p-4.5 shadow-sm hover:border-[#5B51DE] hover:shadow transition-all duration-200 active:scale-98 flex items-center justify-between group"
             >
-              <div>
-                <h3 className="font-bold text-sm text-[#1A1A1A] group-hover:text-[#5B51DE] transition-colors">{theater.name}</h3>
-                <p className="text-[11px] text-[#6B7280] flex items-center gap-1 mt-1">
-                  <img src={locationIcon} style={{ width: '11px', height: '14px', flexShrink: 0 }} alt="location" />
-                  <span className="leading-none">{theater.location?.city || 'Mumbai'}</span>
-                </p>
-                <p className="text-[11px] text-[#6B7280] mt-2 font-medium">
-                  Tickets starting from <span className="text-[#1A1A1A] font-bold">₹{theater.minPrice}</span>
-                </p>
+              <img className="size-20 left-0 top-0 absolute rounded-[5px] object-cover" src={theater.logoUrl || "https://placehold.co/73x73"} alt={theater.name} />
+              <div className="left-[85px] top-[4px] absolute justify-start text-neutral-900 text-sm font-semibold font-['Inter']">{theater.name}</div>
+              <div className="left-[101px] top-[25px] absolute justify-start text-slate-500 text-xs font-normal font-['Inter']">{theater.location?.city || theater.location?.address || 'Unknown'}</div>
+              <img src={locationIcon} className="w-[10px] h-[14px] left-[85px] top-[26px] absolute" alt="location" />
+              <div className="w-auto h-5 left-[85px] top-[53px] absolute rounded-[5px]">
+                <div className="left-0 top-[-4px] absolute justify-start text-slate-500 text-sm font-semibold font-['Inter'] whitespace-nowrap">
+                  {theater.maxPrice ? `₹${theater.minPrice} - ₹${theater.maxPrice}` : `₹${theater.minPrice}`}
+                </div>
               </div>
-              <div className="w-8 h-8 rounded-full bg-[#EEF0FF] flex items-center justify-center text-[#5B51DE] group-hover:bg-[#5B51DE] group-hover:text-white transition-all duration-200">
-                <ChevronRight size={16} />
-              </div>
-            </button>
-          ))
-        )}
+            </div>
+          ))}
+        </div>
       </div>
+
     </div>
   );
 };
