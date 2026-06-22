@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "CineBook Movie Ticket Reservation System",
   "scripts": {
-    "install-client": "npm install --prefix client",
-    "install-server": "npm install --prefix server",
+    "install-client": "npm install --production=false --prefix client",
+    "install-server": "npm install --production=false --prefix server",
     "install-all": "npm run install-server && npm run install-client",
     "build-client": "npm run build --prefix client",
     "build": "npm run install-all && npm run build-client",
