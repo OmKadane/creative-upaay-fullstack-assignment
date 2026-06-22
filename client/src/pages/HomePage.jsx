@@ -1,10 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, TrendingUp } from 'lucide-react';
 import MovieCard from '../components/movie/MovieCard';
 import heroPoster from '../assets/Meg-2-The-Trench-Hero-Poster.svg';
 import searchIcon from '../assets/search.svg';
+import meg2Poster from '../assets/Meg-2-The-Trench-Poster.svg';
+import nun2Poster from '../assets/The-Nun-II-Poster.svg';
+import fastXPoster from '../assets/Fast-X-Poster.svg';
+import johnWickPoster from '../assets/John-Wick-Chapter-4-Poster.svg';
+import gladiator2Poster from '../assets/Gladiator-II-Poster.svg';
+import alienRomulusPoster from '../assets/Alien-Romulus-Poster.svg';
+import dunePartTwoPoster from '../assets/Dune-Part-Two-Poster.svg';
+import deadpoolWolverinePoster from '../assets/Deadpool-Wolverine-Poster.svg';
+import movieTheatre1Poster from '../assets/Movie-Theatre-1-Poster.svg';
+import movieTheatre2Poster from '../assets/Movie-Theatre-2-Poster.svg';
+import movieTheatre3Poster from '../assets/Movie-Theatre-3-Poster.svg';
+import locationIcon from '../assets/location.svg';
 import {
   fetchMoviesStart,
   fetchMoviesSuccess,
@@ -16,9 +27,9 @@ import {
 import { getMovies } from '../services/movieService';
 
 const SkeletonCard = () => (
-  <div className="flex-shrink-0 w-36">
-    <div className="skeleton w-full aspect-[2/3] rounded-2xl mb-2.5" />
-    <div className="skeleton h-3.5 w-3/4 mb-1.5 rounded" />
+  <div className="flex-shrink-0 w-[106px] h-auto flex flex-col gap-[5px]">
+    <div className="skeleton w-[106px] h-[158px] rounded-[5px]" />
+    <div className="skeleton h-3.5 w-3/4 rounded" />
     <div className="skeleton h-2.5 w-1/2 rounded" />
   </div>
 );
@@ -44,12 +55,88 @@ const HomePage = () => {
     loadMovies();
   }, [dispatch]);
 
-  const featuredMovie = nowShowing[0];
+  const displayedMovies = [];
+  if (activeTab === 'now') {
+    for (let i = 0; i < 4; i++) {
+      const dbMovie = nowShowing[i] || {};
+      if (i === 0) {
+        displayedMovies.push({
+          ...dbMovie,
+          title: 'Meg 2: The Trench',
+          genre: ['Action', 'Sci-Fi', 'Horror'],
+          imdbRating: 4.5,
+          posterUrl: meg2Poster
+        });
+      } else if (i === 1) {
+        displayedMovies.push({
+          ...dbMovie,
+          title: 'The Nun II',
+          genre: ['Horror'],
+          imdbRating: 4.5,
+          posterUrl: nun2Poster
+        });
+      } else if (i === 2) {
+        displayedMovies.push({
+          ...dbMovie,
+          title: 'Fast X',
+          genre: ['Action', 'Adventure'],
+          imdbRating: 4.5,
+          posterUrl: fastXPoster
+        });
+      } else if (i === 3) {
+        displayedMovies.push({
+          ...dbMovie,
+          title: 'John Wick: Chapter 4',
+          genre: ['Action', 'Thriller'],
+          imdbRating: 4.5,
+          posterUrl: johnWickPoster
+        });
+      }
+    }
+  } else {
+    const g2Db = comingSoon.find(m => m.title.toLowerCase().includes('gladiator')) || {};
+    const alienDb = comingSoon.find(m => m.title.toLowerCase().includes('alien')) || {};
+    const duneDb = nowShowing.find(m => m.title.toLowerCase().includes('dune')) || {};
+    const dpDb = nowShowing.find(m => m.title.toLowerCase().includes('deadpool')) || {};
+
+    displayedMovies.push({
+      ...g2Db,
+      title: 'Gladiator II',
+      genre: ['Action', 'Adventure'],
+      imdbRating: 4.5,
+      posterUrl: gladiator2Poster,
+      status: 'coming_soon'
+    });
+    displayedMovies.push({
+      ...alienDb,
+      title: 'Alien: Romulus',
+      genre: ['Horror', 'Sci-Fi', 'Thriller'],
+      imdbRating: 4.5,
+      posterUrl: alienRomulusPoster,
+      status: 'coming_soon'
+    });
+    displayedMovies.push({
+      ...duneDb,
+      title: 'Dune: Part Two',
+      genre: ['Sci-Fi', 'Adventure'],
+      imdbRating: 4.5,
+      posterUrl: dunePartTwoPoster,
+      status: 'coming_soon'
+    });
+    displayedMovies.push({
+      ...dpDb,
+      title: 'Deadpool & Wolverine',
+      genre: ['Action', 'Comedy'],
+      imdbRating: 4.5,
+      posterUrl: deadpoolWolverinePoster,
+      status: 'coming_soon'
+    });
+  }
 
   return (
-    <div className="page-container bg-[#F7F8FD] !pt-0">
+    <div className="page-container bg-[#F7F8FD] !pt-0 !pb-[85px]">
       {/* Hero Poster Header */}
-      <div 
+      <div
         className="relative overflow-hidden mb-6"
         style={{
           width: '390px',
@@ -80,77 +167,300 @@ const HomePage = () => {
         </button>
       </div>
 
-      {/* Tab selector */}
-      <div className="flex gap-2 mx-5 mb-5 bg-white border border-[#E5E7EB] p-1 rounded-2xl shadow-sm">
+      {/* Tab selector and View All */}
+      <div
+        className="flex items-center justify-between"
+        style={{
+          width: '416px',
+          height: '24px',
+          marginLeft: '-26px',
+          paddingLeft: '52px',
+          paddingRight: '25px',
+          boxSizing: 'border-box',
+        }}
+      >
+        <div className="flex gap-5 h-full items-center">
+          <button
+            onClick={() => setActiveTab('now')}
+            className={`relative h-full pb-1 text-[12px] font-bold transition-all duration-200 ${activeTab === 'now'
+              ? 'text-[#4F46E5]'
+              : 'text-[#64748B] hover:text-[#4F46E5]'
+              }`}
+          >
+            Now Showing
+            {activeTab === 'now' && (
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#4F46E5]" />
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('soon')}
+            className={`relative h-full pb-1 text-[12px] font-bold transition-all duration-200 ${activeTab === 'soon'
+              ? 'text-[#4F46E5]'
+              : 'text-[#64748B] hover:text-[#4F46E5]'
+              }`}
+          >
+            Coming Soon
+            {activeTab === 'soon' && (
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#4F46E5]" />
+            )}
+          </button>
+        </div>
         <button
-          onClick={() => setActiveTab('now')}
-          className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 ${
-            activeTab === 'now'
-              ? 'bg-[#5B51DE] text-white shadow'
-              : 'text-[#6B7280] hover:text-[#1A1A1A]'
-          }`}
+          onClick={() => navigate('/movies')}
+          style={{
+            padding: 0,
+            border: 'none',
+            background: 'none',
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 400,
+            fontSize: '12px',
+            lineHeight: '100%',
+            letterSpacing: '0%',
+            color: '#4F46E5',
+            width: '45px',
+            height: '15px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}
         >
-          Now Showing
-        </button>
-        <button
-          onClick={() => setActiveTab('soon')}
-          className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 ${
-            activeTab === 'soon'
-              ? 'bg-[#5B51DE] text-white shadow'
-              : 'text-[#6B7280] hover:text-[#1A1A1A]'
-          }`}
-        >
-          Coming Soon
+          View All
         </button>
       </div>
 
-      {/* Movie grid */}
-      <div className="scroll-x flex gap-4.5 px-5 mb-6">
+      {/* Movie grid — Frame 9: width 390px, height 240px, top 39px, left -26px */}
+      <div
+        style={{
+          width: '416px',
+          height: '240px',
+          marginTop: '15px',
+          marginLeft: '-26px',
+          marginBottom: '24px',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          display: 'flex',
+          gap: '9px',
+          paddingLeft: '52px',
+          paddingRight: '26px',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          boxSizing: 'border-box',
+        }}
+      >
         {loading
           ? Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
-          : (activeTab === 'now' ? nowShowing : comingSoon).map((movie) => (
-              <MovieCard key={movie._id} movie={movie} />
-            ))}
-        {!loading && (activeTab === 'now' ? nowShowing : comingSoon).length === 0 && (
+          : displayedMovies.map((movie) => (
+            <MovieCard key={movie._id} movie={movie} />
+          ))}
+        {!loading && displayedMovies.length === 0 && (
           <p className="text-[#6B7280] text-sm py-8 text-center w-full">No movies found in this category.</p>
         )}
       </div>
-
-      {/* Trending section */}
-      <div className="mb-6">
-        <div className="section-header">
-          <span className="section-title flex items-center gap-2 text-[#1A1A1A]">
-            <TrendingUp size={18} className="text-[#5B51DE]" />
-            Trending
-          </span>
-        </div>
-        <div className="flex flex-col gap-3 px-5">
-          {loading
-            ? Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className="skeleton h-24 w-full rounded-2xl" />
-              ))
-            : nowShowing.slice(1, 4).map((movie) => (
-                <MovieCard key={movie._id} movie={movie} variant="landscape" />
-              ))}
-        </div>
-      </div>
-
-      {/* Theatre section */}
-      <div className="mb-6">
-        <div className="section-header">
-          <span className="section-title text-[#1A1A1A]">Nearby Theatres</span>
-          <button className="text-xs text-[#5B51DE] font-semibold hover:underline" onClick={() => navigate('/theaters')}>
-            See all
+      {/* Movie Theatres section */}
+      <div
+        style={{
+          width: '339px',
+          height: 'auto',
+          marginLeft: '26px',
+          marginTop: '19px',
+          boxSizing: 'border-box',
+        }}
+      >
+        <div
+          style={{
+            width: '338px',
+            height: '19px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            boxSizing: 'border-box',
+          }}
+          className="mb-4"
+        >
+          <h2
+            style={{
+              margin: 0,
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 700,
+              fontSize: '16px',
+              lineHeight: '100%',
+              letterSpacing: '0%',
+              color: '#454545',
+              width: '122px',
+              height: '19px',
+            }}
+          >
+            Movie Theatres
+          </h2>
+          <button
+            onClick={() => navigate('/theaters')}
+            style={{
+              padding: 0,
+              border: 'none',
+              background: 'none',
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 400,
+              fontSize: '12px',
+              lineHeight: '100%',
+              letterSpacing: '0%',
+              color: '#4F46E5',
+              width: '45px',
+              height: '15px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            View All
           </button>
         </div>
-        <div className="scroll-x flex gap-3.5 px-5">
-          {['PVR: Phoenix Mall', 'INOX: Lido Mall', 'Cinepolis: Nexus', 'Miraj Cinemas'].map((name, i) => (
-            <div key={i} className="flex-shrink-0 card p-4 w-44 bg-white border border-[#E5E7EB] shadow-sm">
-              <div className="w-9 h-9 rounded-xl bg-[#EEF0FF] flex items-center justify-center mb-3">
-                <MapPin size={16} className="text-[#5B51DE]" />
+        <div className="flex flex-col gap-3">
+          {[
+            {
+              name: 'The Grandview',
+              location: 'Camp Aguinaldo, Quezon City',
+              price: '₹320 - ₹450',
+              logo: (
+                <img
+                  src={movieTheatre1Poster}
+                  alt="The Grandview Logo"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              )
+            },
+            {
+              name: 'Play Loft',
+              location: 'Aurora Boulevard, Santa Mesa',
+              price: '₹300 - ₹430',
+              logo: (
+                <img
+                  src={movieTheatre2Poster}
+                  alt="Play Loft Logo"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              )
+            },
+            {
+              name: 'CinemaOne',
+              location: 'A Cruz, Pasay City',
+              price: '₹320',
+              logo: (
+                <img
+                  src={movieTheatre3Poster}
+                  alt="CinemaOne Logo"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              )
+            }
+          ].map((theatre, i) => (
+            <div
+              key={i}
+              style={{
+                width: '338px',
+                height: '73px',
+                position: 'relative',
+                left: '1px',
+                boxSizing: 'border-box',
+                borderRadius: '8px',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  width: '73px',
+                  height: '73px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                }}
+              >
+                {theatre.logo}
               </div>
-              <p className="text-xs font-bold text-[#1A1A1A] leading-tight mb-1 truncate">{name}</p>
-              <p className="text-[10px] text-[#6B7280]">From ₹{200 + i * 50} · 2D/3D</p>
+              <p
+                className="truncate"
+                style={{
+                  position: 'absolute',
+                  left: '85px',
+                  top: '4px',
+                  width: theatre.name === 'The Grandview' ? '103px' : theatre.name === 'Play Loft' ? '60px' : '80px',
+                  height: '17px',
+                  lineHeight: '100%',
+                  letterSpacing: '0%',
+                  margin: 0,
+                  fontFamily: 'Inter, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  color: '#121212',
+                  opacity: 1,
+                }}
+              >
+                {theatre.name}
+              </p>
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '85px',
+                  top: '26px',
+                  height: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                }}
+              >
+                <img
+                  src={locationIcon}
+                  style={{
+                    width: '11px',
+                    height: '14px',
+                    opacity: 1,
+                    transform: 'rotate(0deg)',
+                    flexShrink: 0,
+                  }}
+                  alt="location"
+                />
+                <span
+                  style={{
+                    display: 'inline-block',
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: '400',
+                    fontSize: '12px',
+                    lineHeight: '1',
+                    letterSpacing: '0%',
+                    color: '#64748B',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {theatre.location}
+                </span>
+              </div>
+              <p
+                className="truncate"
+                style={{
+                  position: 'absolute',
+                  left: '85px',
+                  top: '50px',
+                  width: theatre.name === 'The Grandview' ? '84px' : theatre.name === 'Play Loft' ? '85px' : '84px',
+                  height: '17px',
+                  lineHeight: '100%',
+                  letterSpacing: '0%',
+                  margin: 0,
+                  fontFamily: 'Inter, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  color: '#64748B',
+                  opacity: 1,
+                }}
+              >
+                {theatre.price}
+              </p>
             </div>
           ))}
         </div>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { MapPin, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+import locationIcon from '../assets/location.svg';
 import { getShowtimesForMovie } from '../services/bookingService';
 import { getMovieById } from '../services/movieService';
 import { setSelectedMovie } from '../store/slices/bookingSlice';
@@ -138,8 +139,8 @@ const SelectTheatrePage = () => {
               <div>
                 <h3 className="font-bold text-sm text-[#1A1A1A] group-hover:text-[#5B51DE] transition-colors">{theater.name}</h3>
                 <p className="text-[11px] text-[#6B7280] flex items-center gap-1 mt-1">
-                  <MapPin size={12} className="text-[#5B51DE]" />
-                  {theater.location?.city || 'Mumbai'}
+                  <img src={locationIcon} style={{ width: '11px', height: '14px', flexShrink: 0 }} alt="location" />
+                  <span className="leading-none">{theater.location?.city || 'Mumbai'}</span>
                 </p>
                 <p className="text-[11px] text-[#6B7280] mt-2 font-medium">
                   Tickets starting from <span className="text-[#1A1A1A] font-bold">₹{theater.minPrice}</span>

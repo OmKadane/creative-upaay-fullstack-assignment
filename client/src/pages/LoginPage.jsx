@@ -87,7 +87,7 @@ const LoginPage = () => {
         </button>
         <button
           type="button"
-          onClick={() => navigate('/register')}
+          onClick={() => navigate('/signup')}
           className="flex-1 py-1 text-xs font-bold rounded-[5px] transition-all duration-200 text-[#6B7280] hover:text-[#1A1A1A]"
         >
           Sign Up

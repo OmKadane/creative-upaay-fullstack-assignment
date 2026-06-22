@@ -95,7 +95,7 @@ const RegisterPage = () => {
         </button>
         <button
           type="button"
-          onClick={() => navigate('/register')}
+          onClick={() => navigate('/signup')}
           className="flex-1 py-1 text-xs font-bold rounded-[5px] transition-all duration-200 bg-white text-[#1A1A1A] shadow-sm"
         >
           Sign Up

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { CheckCircle, Calendar, Clock, MapPin, Ticket } from 'lucide-react';
+import { CheckCircle, Calendar, Clock, Ticket } from 'lucide-react';
+import locationIcon from '../assets/location.svg';
 import { getBookingById } from '../services/bookingService';
 import Header from '../components/layout/Header';
 import { formatDate, formatCurrency } from '../utils/helpers';
@@ -63,8 +64,8 @@ const PaymentSuccessPage = () => {
               <div className="min-w-0 flex flex-col justify-center">
                 <h3 className="font-bold text-sm text-[#1A1A1A] truncate">{booking.bookingSnapshot?.movieTitle || booking.movie?.title}</h3>
                 <p className="text-[10px] text-[#6B7280] font-semibold flex items-center gap-1 mt-1">
-                  <MapPin size={11} className="text-[#5B51DE]" />
-                  {booking.bookingSnapshot?.theaterName || booking.theater?.name}
+                  <img src={locationIcon} style={{ width: '11px', height: '14px', flexShrink: 0 }} alt="location" />
+                  <span className="leading-none">{booking.bookingSnapshot?.theaterName || booking.theater?.name}</span>
                 </p>
               </div>
             </div>

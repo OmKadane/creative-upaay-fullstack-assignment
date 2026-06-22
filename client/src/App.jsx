@@ -21,7 +21,7 @@ import RegisterPage from './pages/RegisterPage';
 
 const App = () => {
   const location = useLocation();
-  const hideBottomNav = ['/login', '/register'].includes(location.pathname);
+  const hideBottomNav = ['/login', '/signup'].includes(location.pathname);
 
   const toasterConfig = (
     <Toaster
@@ -53,8 +53,9 @@ const App = () => {
       <div className="app-shell relative shadow-2xl border border-gray-200/50 rounded-[5px]">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/signup" element={<RegisterPage />} />
           
           <Route path="/movies/:id" element={<MovieDetailPage />} />
           <Route path="/select-theatre/:movieId" element={<SelectTheatrePage />} />

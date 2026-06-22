@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Star, Clock, Play } from 'lucide-react';
+import { Star, Clock } from 'lucide-react';
 import { formatDuration } from '../../utils/helpers';
+import starIcon from '../../assets/star.svg';
 
 const MovieCard = ({ movie, variant = 'portrait' }) => {
   const navigate = useNavigate();
@@ -58,48 +59,68 @@ const MovieCard = ({ movie, variant = 'portrait' }) => {
   return (
     <button
       onClick={() => navigate(`/movies/${movie._id}`)}
-      className="flex-shrink-0 w-36 text-left group animate-fade-in active:scale-95 transition-transform duration-150"
+      className="flex-shrink-0 w-[106px] h-auto text-left group animate-fade-in active:scale-95 transition-transform duration-150 flex flex-col gap-[5px]"
     >
-      <div className="relative rounded-2xl overflow-hidden mb-2 shadow-sm border border-[#E5E7EB] bg-white aspect-[2/3]">
+      <div
+        className="relative overflow-hidden shadow-sm border border-[#E5E7EB] bg-white w-[106px] h-[158px] rounded-[5px]"
+        style={{ transform: 'translate3d(0, 0, 0)' }}
+      >
         <img
           src={movie.posterUrl}
           alt={movie.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          style={{
+            transform: 'translate3d(0, 0, 0)',
+            backfaceVisibility: 'hidden',
+            willChange: 'transform',
+          }}
           loading="lazy"
         />
 
         {/* Rating badge */}
-        <div className="absolute top-2 right-2 flex items-center gap-0.5 bg-black/60 backdrop-blur-xs rounded-full px-2 py-0.5">
-          <Star size={10} className="text-amber-400 fill-amber-400" />
-          <span className="text-[10px] text-white font-bold">{movie.imdbRating?.toFixed(1)}</span>
-        </div>
-
-        {/* Play button hover */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-[#5B51DE]/15">
-          <div className="bg-[#5B51DE] rounded-full p-2.5 shadow-md shadow-[#5B51DE]/30">
-            <Play size={14} className="text-white fill-white" />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '50.52px',
+            height: '21.91px',
+            backgroundColor: '#080325',
+            borderTopLeftRadius: '5px',
+            borderBottomRightRadius: '5px',
+            borderTopRightRadius: '0px',
+            borderBottomLeftRadius: '0px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxSizing: 'border-box',
+            zIndex: 10,
+          }}
+        >
+          <div
+            style={{
+              width: '35px',
+              height: '15px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              boxSizing: 'border-box',
+            }}
+          >
+            <img src={starIcon} alt="Star" className="w-[11px] h-[11px] flex-shrink-0" />
+            <span className="text-[10px] text-[#F7F8FD] font-bold leading-none whitespace-nowrap">
+              {movie.imdbRating?.toFixed(1) || '4.5'}
+            </span>
           </div>
         </div>
-
-        {/* Coming soon overlay */}
-        {movie.status === 'coming_soon' && (
-          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent py-2.5 px-2">
-            <span className="badge-warning text-[9px] font-semibold">Coming Soon</span>
-          </div>
-        )}
       </div>
 
-      <h3 className="font-display font-bold text-xs text-[#1A1A1A] leading-tight line-clamp-1 mb-1 group-hover:text-[#5B51DE] transition-colors">
+      <h3 className="font-sans font-semibold text-[14px] leading-[1.34] text-[#454545] w-[102px] line-clamp-2 group-hover:text-[#5B51DE] transition-colors">
         {movie.title}
       </h3>
-      <div className="flex items-center gap-1.5 text-[10px] text-[#6B7280] font-medium">
-        <span className="flex items-center gap-0.5">
-          <Clock size={10} />
-          {formatDuration(movie.duration)}
-        </span>
-        <span className="text-[#D1D5DB]">•</span>
-        <span>{movie.formats?.[0] || '2D'}</span>
-      </div>
+      <p className="font-sans font-normal text-[12px] leading-[15px] text-[#454545] w-[102px] line-clamp-2">
+        {movie.genre?.map(g => g === 'Sci-Fi' ? 'Sci-fi' : g).join(', ')}
+      </p>
     </button>
   );
 };

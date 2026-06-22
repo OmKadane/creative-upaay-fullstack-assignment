@@ -1,5 +1,6 @@
 import { QRCodeSVG as QRCode } from 'qrcode.react';
-import { MapPin, Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock } from 'lucide-react';
+import locationIcon from '../../assets/location.svg';
 import { formatDate, formatCurrency } from '../../utils/helpers';
 
 const TicketCard = ({ booking, onCancel }) => {
@@ -34,8 +35,8 @@ const TicketCard = ({ booking, onCancel }) => {
               </span>
             </div>
             <div className="flex items-center gap-1 text-[11px] text-[#6B7280] font-medium mb-1">
-              <MapPin size={10} className="flex-shrink-0 text-[#5B51DE]" />
-              <span className="truncate">{booking.bookingSnapshot?.theaterName || booking.theater?.name}</span>
+              <img src={locationIcon} style={{ width: '10px', height: '13px', flexShrink: 0 }} alt="location" />
+              <span className="truncate leading-none">{booking.bookingSnapshot?.theaterName || booking.theater?.name}</span>
             </div>
             <div className="flex items-center gap-2 text-[11px] text-[#6B7280] font-medium mb-2.5">
               <Calendar size={10} className="text-[#5B51DE]" />

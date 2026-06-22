@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Clock, MapPin, Film } from 'lucide-react';
+import { Clock, Film } from 'lucide-react';
+import locationIcon from '../assets/location.svg';
 import { getShowtimesForMovie } from '../services/bookingService';
 import { getMovieById } from '../services/movieService';
 import { getTheaters } from '../services/bookingService';
@@ -102,7 +103,8 @@ const SelectSchedulePage = () => {
             <p className="text-[11px] text-[#6B7280] mt-0.5">{movie?.genre?.join(' • ')}</p>
             <div className="h-px bg-[#E5E7EB] my-1.5" />
             <h3 className="font-bold text-xs text-[#5B51DE] flex items-center gap-1">
-              <MapPin size={12} /> {theater?.name}
+              <img src={locationIcon} style={{ width: '11px', height: '14px', flexShrink: 0 }} alt="location" />
+              <span className="leading-none">{theater?.name}</span>
             </h3>
             <p className="text-[10px] text-[#6B7280] ml-4">
               {formatDate(new Date(selectedDateStr))}
