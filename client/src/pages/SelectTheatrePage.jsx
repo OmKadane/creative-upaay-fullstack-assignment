@@ -125,21 +125,26 @@ const SelectTheatrePage = () => {
   if (!movie) return <div className="w-[390px] h-[846px] relative bg-slate-50 mx-auto rounded-[5px]" />;
 
   return (
-    <div className="w-[390px] h-[846px] relative bg-slate-50 overflow-hidden mx-auto rounded-[5px]">
+    <div className="w-[390px] h-[846px] relative bg-[#F7F8FD] overflow-hidden mx-auto rounded-[5px]">
 
       {/* Background & Header */}
-      <img className="w-[390px] h-[173px] left-0 top-0 absolute object-cover rounded-t-[5px]" src={meg2ScenePoster2} alt="banner" />
+      <img className="w-[390px] h-[173px] left-0 top-0 absolute object-cover rounded-t-[5px]" src={movie?.bannerUrl || meg2ScenePoster2} alt="banner" />
+      <div className="w-[390px] h-[173px] left-0 top-0 absolute bg-[rgba(21,17,48,0.7)] backdrop-blur-[1px] rounded-t-[5px]" />
 
       {/* Back & Cancel */}
-      <div className="left-[23px] top-[44px] absolute flex items-center gap-[9px] cursor-pointer" onClick={() => navigate(-1)}>
+      <div className="left-[23px] top-[44px] absolute flex items-center gap-[9px] cursor-pointer z-10" onClick={() => navigate(-1)}>
         <img src={backIcon} className="w-[21px] h-[21px]" alt="back" />
         <div className="text-[#F7F8FD] text-sm font-semibold font-['Inter']">Back</div>
       </div>
-      <div className="right-[28px] top-[46px] absolute justify-start text-[#F7F8FD] text-sm font-semibold font-['Inter'] cursor-pointer" onClick={() => navigate('/')}>Cancel</div>
+      <div className="right-[28px] top-[46px] absolute justify-start text-[#F7F8FD] text-sm font-semibold font-['Inter'] cursor-pointer z-10" onClick={() => navigate('/')}>Cancel</div>
 
       {/* Movie Info */}
-      <div className="w-[336px] left-[26px] top-[98px] absolute justify-start text-[#F7F8FD] text-[20px] font-bold font-['Inter']" style={{ lineHeight: '134%' }}>Meg 2: The Trench</div>
-      <div className="w-[172px] left-[26px] top-[129px] absolute justify-start text-[#F7F8FD] text-[14px] font-normal font-['Inter'] leading-normal">Action, Sci-fi, Horror</div>
+      <div className="w-[336px] left-[26px] top-[98px] absolute justify-start text-[#F7F8FD] text-[20px] font-bold font-['Inter'] z-10" style={{ lineHeight: '134%' }}>
+        {movie?.title || 'Meg 2: The Trench'}
+      </div>
+      <div className="w-[172px] left-[26px] top-[129px] absolute justify-start text-[#F7F8FD] text-[14px] font-normal font-['Inter'] leading-normal z-10">
+        {movie?.genre ? movie.genre.join(', ') : 'Action, Sci-fi, Horror'}
+      </div>
 
       {/* Progress Bar */}
       <div data-progress="20%" className="w-[334px] h-2 left-[26px] top-[191px] absolute bg-[#E7E7E7] rounded-3xl overflow-hidden">
@@ -161,12 +166,12 @@ const SelectTheatrePage = () => {
                 style={{ left: `${27 + i * 46}px`, top: '0px' }}
                 onClick={() => setSelectedDate(i)}
               >
-                {/* Day label — centered over the 28px date box (left-[10px], width 28px → center at 24px) */}
+                {/* Day label — centered over the 28px date box */}
                 <div className={`w-7 left-[10px] top-0 absolute text-center text-xs font-semibold font-['Inter'] ${isSelected ? 'text-indigo-600' : 'text-slate-500'}`}>
                   {item.day}
                 </div>
                 {/* Date box with centered number */}
-                <div className={`size-7 left-[10px] top-[20px] absolute rounded-[5px] border flex items-center justify-center text-sm font-semibold font-['Inter'] ${isSelected ? 'bg-indigo-600 border-indigo-600 text-slate-50' : 'bg-slate-50 border-slate-300 text-slate-500'}`}>
+                <div className={`size-7 left-[10px] top-[20px] absolute rounded-[5px] border flex items-center justify-center text-sm font-semibold font-['Inter'] ${isSelected ? 'bg-indigo-600 border-indigo-600 text-slate-50' : 'bg-[#F7F8FD] border-slate-300 text-slate-500'}`}>
                   {item.date}
                 </div>
               </div>
@@ -179,16 +184,16 @@ const SelectTheatrePage = () => {
 
       {/* Theatres List */}
       <div 
-        className="absolute overflow-y-auto scrollbar-none" 
-        style={{ 
-          top: '360px', 
-          left: '19px', 
-          width: '338px', 
-          height: '316px', 
-          opacity: 1, 
-          scrollbarWidth: 'none', 
-          msOverflowStyle: 'none' 
-        }}
+          className="absolute overflow-y-auto scrollbar-none" 
+          style={{ 
+            top: '360px', 
+            left: '18px', 
+            width: '339px', 
+            height: '316px', 
+            opacity: 1, 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none' 
+          }}
       >
         <div className="relative" style={{ height: `${uniqueTheaters.length * 81}px` }}>
           {uniqueTheaters.map((theater, i) => (
@@ -205,7 +210,7 @@ const SelectTheatrePage = () => {
                   ? `${theater.location.address}, ${theater.location.city}`
                   : theater.location?.city || theater.location?.address || 'Unknown'}
               </div>
-              <img src={locationIcon} className="w-[10px] h-[14px] left-[85px] top-[26px] absolute" alt="location" />
+              <img src={locationIcon} className="w-[11px] h-[14px] left-[85px] top-[26px] absolute" alt="location" />
               <div className="w-auto h-5 left-[85px] top-[53px] absolute rounded-[5px]">
                 <div className="left-0 top-[-4px] absolute justify-start text-[#64748B] text-sm font-semibold font-['Inter'] whitespace-nowrap" style={{ lineHeight: '100%' }}>
                   {theater.maxPrice ? `₹${theater.minPrice} - ₹${theater.maxPrice}` : `₹${theater.minPrice}`}
