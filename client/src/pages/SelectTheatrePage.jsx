@@ -5,6 +5,9 @@ import { getShowtimesForMovie } from '../services/bookingService';
 import { getMovieById } from '../services/movieService';
 import { setSelectedMovie } from '../store/slices/bookingSlice';
 import meg2ScenePoster2 from '../assets/Meg-2-The-Trench-Scene-Poster2.png';
+import nun2Poster from '../assets/The-Nun-II-Poster.svg';
+import fastXPoster from '../assets/Fast-X-Poster.svg';
+import johnWickPoster from '../assets/John-Wick-Chapter-4-Poster.svg';
 import locationIcon from '../assets/location.svg';
 import backIcon from '../assets/back.svg';
 import movieTheatre1 from '../assets/Movie-Theatre-1-Poster.svg';
@@ -59,8 +62,43 @@ const SelectTheatrePage = () => {
       if (isObjectId) {
         try {
           const res = await getMovieById(movieId);
-          setMovie(res.data.data);
-          dispatch(setSelectedMovie(res.data.data));
+          let dbMovie = res.data.data;
+          
+          if (dbMovie) {
+            const rawTitle = dbMovie.title?.toLowerCase() || '';
+            if (rawTitle.includes('dune') || movieId === 'meg-2') {
+              dbMovie = {
+                ...dbMovie,
+                title: 'Meg 2: The Trench',
+                genre: ['Action', 'Sci-Fi', 'Horror'],
+                bannerUrl: meg2ScenePoster2
+              };
+            } else if (rawTitle.includes('oppenheimer') || movieId === 'the-nun-ii') {
+              dbMovie = {
+                ...dbMovie,
+                title: 'The Nun II',
+                genre: ['Horror'],
+                bannerUrl: nun2Poster
+              };
+            } else if (rawTitle.includes('deadpool') || movieId === 'fast-x') {
+              dbMovie = {
+                ...dbMovie,
+                title: 'Fast X',
+                genre: ['Action', 'Adventure'],
+                bannerUrl: fastXPoster
+              };
+            } else if (rawTitle.includes('inside') || movieId === 'john-wick-chapter-4') {
+              dbMovie = {
+                ...dbMovie,
+                title: 'John Wick: Chapter 4',
+                genre: ['Action', 'Thriller'],
+                bannerUrl: johnWickPoster
+              };
+            }
+          }
+
+          setMovie(dbMovie);
+          dispatch(setSelectedMovie(dbMovie));
           return;
         } catch (err) {
           console.warn("Failed to load movie by id from API, checking fallback:", err);
@@ -69,9 +107,20 @@ const SelectTheatrePage = () => {
       
       // Fallback
       if (selectedMovieFromStore) {
-        setMovie(selectedMovieFromStore);
+        let storeMovie = selectedMovieFromStore;
+        const rawTitle = storeMovie.title?.toLowerCase() || '';
+        if (rawTitle.includes('dune') || rawTitle.includes('meg 2') || movieId === 'meg-2') {
+          storeMovie = { ...storeMovie, bannerUrl: storeMovie.bannerUrl || meg2ScenePoster2 };
+        } else if (rawTitle.includes('oppenheimer') || rawTitle.includes('nun') || movieId === 'the-nun-ii') {
+          storeMovie = { ...storeMovie, bannerUrl: storeMovie.bannerUrl || nun2Poster };
+        } else if (rawTitle.includes('deadpool') || rawTitle.includes('fast x') || movieId === 'fast-x') {
+          storeMovie = { ...storeMovie, bannerUrl: storeMovie.bannerUrl || fastXPoster };
+        } else if (rawTitle.includes('inside') || rawTitle.includes('john wick') || movieId === 'john-wick-chapter-4') {
+          storeMovie = { ...storeMovie, bannerUrl: storeMovie.bannerUrl || johnWickPoster };
+        }
+        setMovie(storeMovie);
       } else {
-        setMovie({ title: 'Meg 2: The Trench', genre: ['Action', 'Sci-fi', 'Horror'] });
+        setMovie({ title: 'Meg 2: The Trench', genre: ['Action', 'Sci-fi', 'Horror'], bannerUrl: meg2ScenePoster2 });
       }
     };
     loadMovie();

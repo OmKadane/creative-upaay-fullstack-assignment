@@ -6,6 +6,10 @@ import { getMovieById } from '../services/movieService';
 import { setSelectedMovie } from '../store/slices/bookingSlice';
 import { formatDuration } from '../utils/helpers';
 import meg2ScenePoster from '../assets/Meg-2-The-Trench-Scene-Poster.svg';
+import meg2Poster from '../assets/Meg-2-The-Trench-Poster.svg';
+import nun2Poster from '../assets/The-Nun-II-Poster.svg';
+import fastXPoster from '../assets/Fast-X-Poster.svg';
+import johnWickPoster from '../assets/John-Wick-Chapter-4-Poster.svg';
 import cast1 from '../assets/Cast-1.jpg';
 import cast2 from '../assets/Cast-2.jpg';
 import cast3 from '../assets/Cast-3.jpg';
@@ -19,6 +23,8 @@ const MOVIE_OVERRIDES = {
     formats: ['2D', '3D'],
     rating: 'PG-13',
     imdbRating: 5.1,
+    bannerUrl: meg2ScenePoster,
+    posterUrl: meg2Poster,
     cast: [
       { name: 'Jason Statham', role: 'Jonas Taylor', photo: cast1 },
       { name: 'Jing Wu', role: 'Jiuming Zhang', photo: cast2 },
@@ -33,6 +39,8 @@ const MOVIE_OVERRIDES = {
     formats: ['2D'],
     rating: 'R',
     imdbRating: 6.4,
+    bannerUrl: nun2Poster,
+    posterUrl: nun2Poster,
     cast: [
       { name: 'Taissa Farmiga', role: 'Sister Irene' },
       { name: 'Jonas Bloquet', role: 'Frenchie' },
@@ -46,6 +54,8 @@ const MOVIE_OVERRIDES = {
     formats: ['2D', '3D', 'IMAX'],
     rating: 'PG-13',
     imdbRating: 7.0,
+    bannerUrl: fastXPoster,
+    posterUrl: fastXPoster,
     cast: [
       { name: 'Vin Diesel', role: 'Dominic Toretto' },
       { name: 'Michelle Rodriguez', role: 'Letty Ortiz' },
@@ -59,6 +69,8 @@ const MOVIE_OVERRIDES = {
     formats: ['2D', 'IMAX'],
     rating: 'R',
     imdbRating: 8.4,
+    bannerUrl: johnWickPoster,
+    posterUrl: johnWickPoster,
     cast: [
       { name: 'Keanu Reeves', role: 'John Wick' },
       { name: 'Donnie Yen', role: 'Caine' },
@@ -116,10 +128,28 @@ const MovieDetailPage = () => {
           }
         }
 
-        // Apply static overrides based on title
-        const titleKey = movieData?.title?.toLowerCase();
-        if (titleKey && MOVIE_OVERRIDES[titleKey]) {
-          movieData = { ...movieData, ...MOVIE_OVERRIDES[titleKey] };
+        // Apply database title mappings to match our UI representation
+        let overrideKey = null;
+        const currentTitle = (stateMovie?.title || movieData?.title || '').toLowerCase();
+        
+        if (currentTitle.includes('dune') || currentTitle.includes('meg 2') || id === 'meg-2') {
+          overrideKey = 'meg 2: the trench';
+        } else if (currentTitle.includes('oppenheimer') || currentTitle.includes('nun') || id === 'the-nun-ii') {
+          overrideKey = 'the nun ii';
+        } else if (currentTitle.includes('deadpool') || currentTitle.includes('fast x') || id === 'fast-x') {
+          overrideKey = 'fast x';
+        } else if (currentTitle.includes('inside') || currentTitle.includes('john wick') || id === 'john-wick-chapter-4') {
+          overrideKey = 'john wick: chapter 4';
+        }
+
+        if (overrideKey && MOVIE_OVERRIDES[overrideKey]) {
+          movieData = { ...movieData, ...MOVIE_OVERRIDES[overrideKey] };
+        } else {
+          // If no override key found, try to match by titleKey
+          const titleKey = movieData?.title?.toLowerCase();
+          if (titleKey && MOVIE_OVERRIDES[titleKey]) {
+            movieData = { ...movieData, ...MOVIE_OVERRIDES[titleKey] };
+          }
         }
 
         setMovie(movieData);

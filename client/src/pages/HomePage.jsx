@@ -57,46 +57,43 @@ const HomePage = () => {
 
   const displayedMovies = [];
   if (activeTab === 'now') {
-    for (let i = 0; i < 4; i++) {
-      const dbMovie = nowShowing[i] || {};
-      if (i === 0) {
-        displayedMovies.push({
-          ...dbMovie,
-          _id: dbMovie._id || 'meg-2',
-          title: 'Meg 2: The Trench',
-          genre: ['Action', 'Sci-Fi', 'Horror'],
-          imdbRating: 4.5,
-          posterUrl: meg2Poster
-        });
-      } else if (i === 1) {
-        displayedMovies.push({
-          ...dbMovie,
-          _id: dbMovie._id || 'the-nun-ii',
-          title: 'The Nun II',
-          genre: ['Horror'],
-          imdbRating: 4.5,
-          posterUrl: nun2Poster
-        });
-      } else if (i === 2) {
-        displayedMovies.push({
-          ...dbMovie,
-          _id: dbMovie._id || 'fast-x',
-          title: 'Fast X',
-          genre: ['Action', 'Adventure'],
-          imdbRating: 4.5,
-          posterUrl: fastXPoster
-        });
-      } else if (i === 3) {
-        displayedMovies.push({
-          ...dbMovie,
-          _id: dbMovie._id || 'john-wick-chapter-4',
-          title: 'John Wick: Chapter 4',
-          genre: ['Action', 'Thriller'],
-          imdbRating: 4.5,
-          posterUrl: johnWickPoster
-        });
-      }
-    }
+    const duneDb = nowShowing.find(m => m.title.toLowerCase().includes('dune')) || {};
+    const oppDb = nowShowing.find(m => m.title.toLowerCase().includes('oppenheimer')) || {};
+    const dpDb = nowShowing.find(m => m.title.toLowerCase().includes('deadpool')) || {};
+    const insideDb = nowShowing.find(m => m.title.toLowerCase().includes('inside')) || {};
+
+    displayedMovies.push({
+      ...duneDb,
+      _id: duneDb._id || 'meg-2',
+      title: 'Meg 2: The Trench',
+      genre: ['Action', 'Sci-Fi', 'Horror'],
+      imdbRating: 4.5,
+      posterUrl: meg2Poster
+    });
+    displayedMovies.push({
+      ...oppDb,
+      _id: oppDb._id || 'the-nun-ii',
+      title: 'The Nun II',
+      genre: ['Horror'],
+      imdbRating: 4.5,
+      posterUrl: nun2Poster
+    });
+    displayedMovies.push({
+      ...dpDb,
+      _id: dpDb._id || 'fast-x',
+      title: 'Fast X',
+      genre: ['Action', 'Adventure'],
+      imdbRating: 4.5,
+      posterUrl: fastXPoster
+    });
+    displayedMovies.push({
+      ...insideDb,
+      _id: insideDb._id || 'john-wick-chapter-4',
+      title: 'John Wick: Chapter 4',
+      genre: ['Action', 'Thriller'],
+      imdbRating: 4.5,
+      posterUrl: johnWickPoster
+    });
   } else {
     const g2Db = comingSoon.find(m => m.title.toLowerCase().includes('gladiator')) || {};
     const alienDb = comingSoon.find(m => m.title.toLowerCase().includes('alien')) || {};
