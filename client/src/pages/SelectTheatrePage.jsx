@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getShowtimesForMovie } from '../services/bookingService';
 import { getMovieById } from '../services/movieService';
 import { setSelectedMovie } from '../store/slices/bookingSlice';
@@ -18,22 +18,23 @@ import logo4 from '../assets/theater-logo-4.png';
 
 const logoMap = {
   // Original database names
-  'PVR: Phoenix Palladium': logo1,
-  'INOX: Lido Mall': logo2,
-  'Miraj Cinemas: City Centre': logo3,
-  'Cinepolis: DLF Promenade': logo4,
+  'PVR: Phoenix Palladium': movieTheatre1,
+  'INOX: Lido Mall': movieTheatre2,
+  'Miraj Cinemas: City Centre': movieTheatre3,
+  'Cinepolis: DLF Promenade': movieTheatre4,
   
   // Alternative/Mock names
-  'The Grandview': logo1,
-  'Play Loft': logo2,
-  'CinemaOne': logo3,
-  'Cinemount': logo4
+  'The Grandview': movieTheatre1,
+  'Play Loft': movieTheatre2,
+  'CinemaOne': movieTheatre3,
+  'Cinemount': movieTheatre4
 };
 
 const SelectTheatrePage = () => {
   const { movieId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const selectedMovieFromStore = useSelector((state) => state.booking.selectedMovie);
 
   const [movie, setMovie] = useState(null);
   const [showtimes, setShowtimes] = useState([]);
@@ -54,19 +55,35 @@ const SelectTheatrePage = () => {
 
   useEffect(() => {
     const loadMovie = async () => {
-      try {
-        const res = await getMovieById(movieId);
-        setMovie(res.data.data);
-        dispatch(setSelectedMovie(res.data.data));
-      } catch (err) {
-        console.error(err);
+      const isObjectId = /^[0-9a-fA-F]{24}$/.test(movieId);
+      if (isObjectId) {
+        try {
+          const res = await getMovieById(movieId);
+          setMovie(res.data.data);
+          dispatch(setSelectedMovie(res.data.data));
+          return;
+        } catch (err) {
+          console.warn("Failed to load movie by id from API, checking fallback:", err);
+        }
+      }
+      
+      // Fallback
+      if (selectedMovieFromStore) {
+        setMovie(selectedMovieFromStore);
+      } else {
+        setMovie({ title: 'Meg 2: The Trench', genre: ['Action', 'Sci-fi', 'Horror'] });
       }
     };
     loadMovie();
-  }, [movieId, dispatch]);
+  }, [movieId, dispatch, selectedMovieFromStore]);
 
   useEffect(() => {
     const loadShowtimes = async () => {
+      const isObjectId = /^[0-9a-fA-F]{24}$/.test(movieId);
+      if (!isObjectId) {
+        setShowtimes([]);
+        return;
+      }
       try {
         const res = await getShowtimesForMovie(movieId, {});
         setShowtimes(res.data.data);
@@ -129,20 +146,19 @@ const SelectTheatrePage = () => {
 
       {/* Background & Header */}
       <img className="w-[390px] h-[173px] left-0 top-0 absolute object-cover rounded-t-[5px]" src={movie?.bannerUrl || meg2ScenePoster2} alt="banner" />
-      <div className="w-[390px] h-[173px] left-0 top-0 absolute bg-[rgba(21,17,48,0.7)] backdrop-blur-[1px] rounded-t-[5px]" />
 
       {/* Back & Cancel */}
-      <div className="left-[23px] top-[44px] absolute flex items-center gap-[9px] cursor-pointer z-10" onClick={() => navigate(-1)}>
+      <div className="left-[23px] top-[44px] absolute flex items-center gap-[9px] cursor-pointer" onClick={() => navigate(-1)}>
         <img src={backIcon} className="w-[21px] h-[21px]" alt="back" />
         <div className="text-[#F7F8FD] text-sm font-semibold font-['Inter']">Back</div>
       </div>
-      <div className="right-[28px] top-[46px] absolute justify-start text-[#F7F8FD] text-sm font-semibold font-['Inter'] cursor-pointer z-10" onClick={() => navigate('/')}>Cancel</div>
+      <div className="right-[28px] top-[46px] absolute justify-start text-[#F7F8FD] text-sm font-semibold font-['Inter'] cursor-pointer" onClick={() => navigate('/')}>Cancel</div>
 
       {/* Movie Info */}
-      <div className="w-[336px] left-[26px] top-[98px] absolute justify-start text-[#F7F8FD] text-[20px] font-bold font-['Inter'] z-10" style={{ lineHeight: '134%' }}>
+      <div className="w-[336px] left-[26px] top-[98px] absolute justify-start text-[#F7F8FD] text-[20px] font-bold font-['Inter']" style={{ lineHeight: '134%' }}>
         {movie?.title || 'Meg 2: The Trench'}
       </div>
-      <div className="w-[172px] left-[26px] top-[129px] absolute justify-start text-[#F7F8FD] text-[14px] font-normal font-['Inter'] leading-normal z-10">
+      <div className="w-[172px] left-[26px] top-[129px] absolute justify-start text-[#F7F8FD] text-[14px] font-normal font-['Inter'] leading-normal">
         {movie?.genre ? movie.genre.join(', ') : 'Action, Sci-fi, Horror'}
       </div>
 
@@ -205,12 +221,17 @@ const SelectTheatrePage = () => {
             >
               <img className="w-[73px] h-[73px] left-0 top-0 absolute rounded-[5px] object-cover" src={logoMap[theater.name] || theater.logoUrl || "https://placehold.co/73x73"} alt={theater.name} />
               <div className="left-[85px] top-[4px] absolute justify-start text-[#121212] text-sm font-semibold font-['Inter']" style={{ lineHeight: '100%' }}>{theater.name}</div>
-              <div className="left-[101px] top-[25px] absolute justify-start text-[#64748B] text-xs font-normal font-['Inter'] whitespace-nowrap" style={{ lineHeight: '100%' }}>
-                {theater.location?.address && theater.location?.city
-                  ? `${theater.location.address}, ${theater.location.city}`
-                  : theater.location?.city || theater.location?.address || 'Unknown'}
+              {/* Location: left: 85px, top: 26px, width: 240px, height: 14px */}
+              <div className="absolute left-[85px] top-[26px] h-[14px] flex items-center gap-[5px]" style={{ width: '240px' }}>
+                {/* Vector pin: width 11px, height 14px */}
+                <img src={locationIcon} className="w-[11px] h-[14px] flex-shrink-0" alt="location" />
+                {/* Location text: width 224px */}
+                <div className="w-[224px] text-[#64748B] text-[12px] font-normal font-['Inter'] leading-none whitespace-nowrap overflow-hidden text-ellipsis">
+                  {theater.location?.address && theater.location?.city
+                    ? `${theater.location.address}, ${theater.location.city}`
+                    : theater.location?.city || theater.location?.address || 'Unknown'}
+                </div>
               </div>
-              <img src={locationIcon} className="w-[11px] h-[14px] left-[85px] top-[26px] absolute" alt="location" />
               <div className="w-auto h-5 left-[85px] top-[53px] absolute rounded-[5px]">
                 <div className="left-0 top-[-4px] absolute justify-start text-[#64748B] text-sm font-semibold font-['Inter'] whitespace-nowrap" style={{ lineHeight: '100%' }}>
                   {theater.maxPrice ? `₹${theater.minPrice} - ₹${theater.maxPrice}` : `₹${theater.minPrice}`}

@@ -79,9 +79,14 @@ const MovieDetailPage = () => {
     const load = async () => {
       try {
         let movieData = null;
-        if (id && id !== 'meg-2') {
-          const res = await getMovieById(id);
-          movieData = res.data.data;
+        const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+        if (id && id !== 'meg-2' && isObjectId) {
+          try {
+            const res = await getMovieById(id);
+            movieData = res.data.data;
+          } catch (apiErr) {
+            console.warn("Failed to fetch movie from API, falling back to state/static metadata:", apiErr);
+          }
         }
 
         // Apply state overrides
@@ -91,8 +96,24 @@ const MovieDetailPage = () => {
         }
 
         // Fallback for direct links / page refresh where state is lost
-        if (!movieData && id === 'meg-2') {
-          movieData = { title: 'Meg 2: The Trench' };
+        if (!movieData) {
+          if (id === 'meg-2' || id === 'undefined') {
+            movieData = { title: 'Meg 2: The Trench' };
+          } else if (id === 'the-nun-ii') {
+            movieData = { title: 'The Nun II' };
+          } else if (id === 'fast-x') {
+            movieData = { title: 'Fast X' };
+          } else if (id === 'john-wick-chapter-4') {
+            movieData = { title: 'John Wick: Chapter 4' };
+          } else if (id === 'gladiator-ii') {
+            movieData = { title: 'Gladiator II' };
+          } else if (id === 'alien-romulus') {
+            movieData = { title: 'Alien: Romulus' };
+          } else if (id === 'dune-part-two') {
+            movieData = { title: 'Dune: Part Two' };
+          } else if (id === 'deadpool-wolverine') {
+            movieData = { title: 'Deadpool & Wolverine' };
+          }
         }
 
         // Apply static overrides based on title

@@ -62,6 +62,7 @@ const HomePage = () => {
       if (i === 0) {
         displayedMovies.push({
           ...dbMovie,
+          _id: dbMovie._id || 'meg-2',
           title: 'Meg 2: The Trench',
           genre: ['Action', 'Sci-Fi', 'Horror'],
           imdbRating: 4.5,
@@ -70,6 +71,7 @@ const HomePage = () => {
       } else if (i === 1) {
         displayedMovies.push({
           ...dbMovie,
+          _id: dbMovie._id || 'the-nun-ii',
           title: 'The Nun II',
           genre: ['Horror'],
           imdbRating: 4.5,
@@ -78,6 +80,7 @@ const HomePage = () => {
       } else if (i === 2) {
         displayedMovies.push({
           ...dbMovie,
+          _id: dbMovie._id || 'fast-x',
           title: 'Fast X',
           genre: ['Action', 'Adventure'],
           imdbRating: 4.5,
@@ -86,6 +89,7 @@ const HomePage = () => {
       } else if (i === 3) {
         displayedMovies.push({
           ...dbMovie,
+          _id: dbMovie._id || 'john-wick-chapter-4',
           title: 'John Wick: Chapter 4',
           genre: ['Action', 'Thriller'],
           imdbRating: 4.5,
@@ -101,6 +105,7 @@ const HomePage = () => {
 
     displayedMovies.push({
       ...g2Db,
+      _id: g2Db._id || 'gladiator-ii',
       title: 'Gladiator II',
       genre: ['Action', 'Adventure'],
       imdbRating: 4.5,
@@ -109,6 +114,7 @@ const HomePage = () => {
     });
     displayedMovies.push({
       ...alienDb,
+      _id: alienDb._id || 'alien-romulus',
       title: 'Alien: Romulus',
       genre: ['Horror', 'Sci-Fi', 'Thriller'],
       imdbRating: 4.5,
@@ -117,6 +123,7 @@ const HomePage = () => {
     });
     displayedMovies.push({
       ...duneDb,
+      _id: duneDb._id || 'dune-part-two',
       title: 'Dune: Part Two',
       genre: ['Sci-Fi', 'Adventure'],
       imdbRating: 4.5,
@@ -125,6 +132,7 @@ const HomePage = () => {
     });
     displayedMovies.push({
       ...dpDb,
+      _id: dpDb._id || 'deadpool-wolverine',
       title: 'Deadpool & Wolverine',
       genre: ['Action', 'Comedy'],
       imdbRating: 4.5,
